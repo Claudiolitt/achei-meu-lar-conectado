@@ -4,11 +4,24 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Input } from '@/components/ui/input';
-import { Search, Filter } from 'lucide-react';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent } from '@/components/ui/card';
+import { Search, Filter, Home, MapPin } from 'lucide-react';
+import { PropertyType } from '../types/property';
 
 const SearchFilters: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [priceRange, setPriceRange] = useState([0, 1000000]);
+  const [areaRange, setAreaRange] = useState([0, 500]);
+  const [selectedTypes, setSelectedTypes] = useState<PropertyType[]>([]);
+  
+  const togglePropertyType = (type: PropertyType) => {
+    if (selectedTypes.includes(type)) {
+      setSelectedTypes(selectedTypes.filter(t => t !== type));
+    } else {
+      setSelectedTypes([...selectedTypes, type]);
+    }
+  };
   
   return (
     <div className="bg-white rounded-xl shadow-md p-6">
@@ -130,18 +143,18 @@ const SearchFilters: React.FC = () => {
               <label className="block text-sm font-medium text-navy-700 mb-2">
                 Área (m²)
               </label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Qualquer" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="any">Qualquer</SelectItem>
-                  <SelectItem value="50">50+</SelectItem>
-                  <SelectItem value="100">100+</SelectItem>
-                  <SelectItem value="150">150+</SelectItem>
-                  <SelectItem value="200">200+</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="px-3">
+                <Slider
+                  defaultValue={[0, 500]}
+                  max={1000}
+                  step={10}
+                  onValueChange={(value) => setAreaRange(value as number[])}
+                />
+              </div>
+              <div className="flex justify-between mt-2 text-sm text-navy-500">
+                <span>{areaRange[0]} m²</span>
+                <span>{areaRange[1]} m²</span>
+              </div>
             </div>
             
             <div>
@@ -158,6 +171,71 @@ const SearchFilters: React.FC = () => {
                   <SelectItem value="no">Não</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-navy-700 mb-2">
+                Idade do Imóvel
+              </label>
+              <Select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Qualquer" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="any">Qualquer</SelectItem>
+                  <SelectItem value="new">Novo (Até 2 anos)</SelectItem>
+                  <SelectItem value="recent">De 2 a 5 anos</SelectItem>
+                  <SelectItem value="established">De 5 a 10 anos</SelectItem>
+                  <SelectItem value="old">Acima de 10 anos</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="md:col-span-3">
+              <label className="block text-sm font-medium text-navy-700 mb-2">
+                Tipo de Imóvel
+              </label>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                <Button
+                  variant={selectedTypes.includes('apartment') ? 'default' : 'outline'}
+                  className={selectedTypes.includes('apartment') ? 'bg-navy-700' : ''}
+                  onClick={() => togglePropertyType('apartment')}
+                >
+                  <Home className="mr-2 h-4 w-4" />
+                  Apartamento
+                </Button>
+                <Button
+                  variant={selectedTypes.includes('house') ? 'default' : 'outline'}
+                  className={selectedTypes.includes('house') ? 'bg-navy-700' : ''}
+                  onClick={() => togglePropertyType('house')}
+                >
+                  <Home className="mr-2 h-4 w-4" />
+                  Casa
+                </Button>
+                <Button
+                  variant={selectedTypes.includes('commercial') ? 'default' : 'outline'}
+                  className={selectedTypes.includes('commercial') ? 'bg-navy-700' : ''}
+                  onClick={() => togglePropertyType('commercial')}
+                >
+                  <Home className="mr-2 h-4 w-4" />
+                  Comercial
+                </Button>
+                <Button
+                  variant={selectedTypes.includes('land') ? 'default' : 'outline'}
+                  className={selectedTypes.includes('land') ? 'bg-navy-700' : ''}
+                  onClick={() => togglePropertyType('land')}
+                >
+                  <MapPin className="mr-2 h-4 w-4" />
+                  Terreno
+                </Button>
+              </div>
+            </div>
+            
+            <div className="md:col-span-3 pt-4 flex justify-end space-x-2">
+              <Button variant="outline">Limpar Filtros</Button>
+              <Button className="bg-navy-700 hover:bg-navy-600">
+                Aplicar Filtros
+              </Button>
             </div>
           </div>
         )}
