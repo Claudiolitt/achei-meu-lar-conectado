@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Home, Heart, User, Search } from 'lucide-react';
@@ -25,6 +24,9 @@ const Navbar: React.FC = () => {
           </Link>
           <Link to="/about" className="text-navy-700 hover:text-navy-500 font-medium">
             Sobre
+          </Link>
+          <Link to="/register-property" className="btn">
+            Anunciar Imóvel
           </Link>
         </nav>
 
