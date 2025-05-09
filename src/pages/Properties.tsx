@@ -5,6 +5,7 @@ import Footer from '../components/Footer';
 import SearchFilters from '../components/SearchFilters';
 import PropertyCard from '../components/PropertyCard';
 import PropertyListCard from '../components/PropertyListCard';
+import PropertyMap from '../components/PropertyMap';
 import { mockProperties } from '../data/mockProperties';
 import { Button } from '@/components/ui/button';
 import { 
@@ -99,48 +100,48 @@ const Properties: React.FC = () => {
           
           {/* Properties Map View */}
           {viewMode === 'map' && (
-            <div className="bg-gray-100 rounded-lg h-[600px] flex items-center justify-center">
-              <p className="text-navy-600">Visualização do mapa será implementada em breve.</p>
-            </div>
+            <PropertyMap properties={mockProperties} />
           )}
           
-          {/* Pagination */}
-          <Pagination className="mt-8">
-            <PaginationContent>
-              {currentPage > 1 && (
-                <PaginationItem>
-                  <PaginationPrevious href="#" onClick={(e) => {
-                    e.preventDefault();
-                    setCurrentPage(prev => Math.max(prev - 1, 1));
-                  }} />
-                </PaginationItem>
-              )}
-              
-              {pageNumbers.map(number => (
-                <PaginationItem key={number}>
-                  <PaginationLink 
-                    href="#" 
-                    isActive={currentPage === number}
-                    onClick={(e) => {
+          {/* Pagination (only show for grid and list views) */}
+          {viewMode !== 'map' && (
+            <Pagination className="mt-8">
+              <PaginationContent>
+                {currentPage > 1 && (
+                  <PaginationItem>
+                    <PaginationPrevious href="#" onClick={(e) => {
                       e.preventDefault();
-                      setCurrentPage(number);
-                    }}
-                  >
-                    {number}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-              
-              {currentPage < totalPages && (
-                <PaginationItem>
-                  <PaginationNext href="#" onClick={(e) => {
-                    e.preventDefault();
-                    setCurrentPage(prev => Math.min(prev + 1, totalPages));
-                  }} />
-                </PaginationItem>
-              )}
-            </PaginationContent>
-          </Pagination>
+                      setCurrentPage(prev => Math.max(prev - 1, 1));
+                    }} />
+                  </PaginationItem>
+                )}
+                
+                {pageNumbers.map(number => (
+                  <PaginationItem key={number}>
+                    <PaginationLink 
+                      href="#" 
+                      isActive={currentPage === number}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCurrentPage(number);
+                      }}
+                    >
+                      {number}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                
+                {currentPage < totalPages && (
+                  <PaginationItem>
+                    <PaginationNext href="#" onClick={(e) => {
+                      e.preventDefault();
+                      setCurrentPage(prev => Math.min(prev + 1, totalPages));
+                    }} />
+                  </PaginationItem>
+                )}
+              </PaginationContent>
+            </Pagination>
+          )}
         </section>
       </main>
       
