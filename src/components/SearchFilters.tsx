@@ -14,12 +14,14 @@ const SearchFilters: React.FC = () => {
     <div className="bg-white rounded-xl shadow-md p-6">
       <div className="flex flex-col space-y-6">
         <div className="flex flex-col md:flex-row gap-4">
-          <div className="w-full md:w-1/3">
-            <Input 
-              placeholder="Cidade, bairro ou endereço" 
-              className="w-full"
-              prefixIcon={<Search className="h-4 w-4 text-muted-foreground" />}
-            />
+          <div className="w-full md:w-1/3 relative">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input 
+                placeholder="Cidade, bairro ou endereço" 
+                className="w-full pl-10"
+              />
+            </div>
           </div>
           
           <div className="w-full md:w-1/4">
