@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import SearchFilters from '../components/SearchFilters';
 import PropertyCard from '../components/PropertyCard';
+import PropertyListCard from '../components/PropertyListCard';
 import { mockProperties } from '../data/mockProperties';
 import { Button } from '@/components/ui/button';
 import { 
