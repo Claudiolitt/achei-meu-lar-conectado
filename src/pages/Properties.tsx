@@ -1,5 +1,6 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import SearchFilters from '../components/SearchFilters';
@@ -17,17 +18,81 @@ import {
   PaginationPrevious 
 } from '@/components/ui/pagination';
 import { Grid2X2, List, Map } from 'lucide-react';
+import { Property } from '../types/property';
 
 const Properties: React.FC = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list' | 'map'>('grid');
   const [currentPage, setCurrentPage] = useState(1);
+  const [filteredProperties, setFilteredProperties] = useState<Property[]>(mockProperties);
   const propertiesPerPage = 9;
+  const location = useLocation();
+  
+  // Filter properties based on URL parameters
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    let filtered = [...mockProperties];
+    
+    // Search text
+    const searchQuery = params.get('search')?.toLowerCase();
+    if (searchQuery) {
+      filtered = filtered.filter(property => 
+        property.title.toLowerCase().includes(searchQuery) ||
+        property.description.toLowerCase().includes(searchQuery) ||
+        property.address.street.toLowerCase().includes(searchQuery) ||
+        property.address.neighborhood.toLowerCase().includes(searchQuery) ||
+        property.address.city.toLowerCase().includes(searchQuery)
+      );
+    }
+    
+    // Property type
+    const propertyType = params.get('type');
+    if (propertyType && propertyType !== 'all') {
+      filtered = filtered.filter(property => property.type === propertyType);
+    }
+    
+    // Transaction type (sale/rent)
+    const transactionType = params.get('transaction');
+    if (transactionType && transactionType !== 'all') {
+      filtered = filtered.filter(property => property.priceType === transactionType);
+    }
+    
+    // Property types (multiple)
+    const propertyTypes = params.get('propertyTypes')?.split(',');
+    if (propertyTypes && propertyTypes.length > 0 && propertyTypes[0] !== '') {
+      filtered = filtered.filter(property => propertyTypes.includes(property.type));
+    }
+    
+    // Price range
+    const minPrice = params.get('minPrice');
+    if (minPrice) {
+      filtered = filtered.filter(property => property.price >= Number(minPrice));
+    }
+    
+    const maxPrice = params.get('maxPrice');
+    if (maxPrice) {
+      filtered = filtered.filter(property => property.price <= Number(maxPrice));
+    }
+    
+    // Area range
+    const minArea = params.get('minArea');
+    if (minArea) {
+      filtered = filtered.filter(property => property.features.area >= Number(minArea));
+    }
+    
+    const maxArea = params.get('maxArea');
+    if (maxArea) {
+      filtered = filtered.filter(property => property.features.area <= Number(maxArea));
+    }
+    
+    setFilteredProperties(filtered);
+    setCurrentPage(1); // Reset to first page when filters change
+  }, [location.search]);
   
   // Calculate pagination
   const indexOfLastProperty = currentPage * propertiesPerPage;
   const indexOfFirstProperty = indexOfLastProperty - propertiesPerPage;
-  const currentProperties = mockProperties.slice(indexOfFirstProperty, indexOfLastProperty);
-  const totalPages = Math.ceil(mockProperties.length / propertiesPerPage);
+  const currentProperties = filteredProperties.slice(indexOfFirstProperty, indexOfLastProperty);
+  const totalPages = Math.ceil(filteredProperties.length / propertiesPerPage);
   
   // Generate page numbers for pagination
   const pageNumbers = [];
@@ -50,7 +115,11 @@ const Properties: React.FC = () => {
         {/* Property Listing */}
         <section className="container mx-auto px-4 py-8">
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold text-navy-800">Imóveis Encontrados</h1>
+            <h1 className="text-2xl font-bold text-navy-800">
+              {filteredProperties.length === 0 
+                ? "Nenhum imóvel encontrado" 
+                : `${filteredProperties.length} Imóveis Encontrados`}
+            </h1>
             
             <div className="flex items-center space-x-2">
               <Button 
@@ -82,29 +151,47 @@ const Properties: React.FC = () => {
           
           {/* Properties Grid View */}
           {viewMode === 'grid' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {currentProperties.map(property => (
-                <PropertyCard key={property.id} property={property} />
-              ))}
-            </div>
+            <>
+              {filteredProperties.length === 0 ? (
+                <div className="py-12 text-center">
+                  <p className="text-navy-600">Nenhum imóvel corresponde aos critérios de busca.</p>
+                  <Button variant="outline" className="mt-4">Limpar filtros</Button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {currentProperties.map(property => (
+                    <PropertyCard key={property.id} property={property} />
+                  ))}
+                </div>
+              )}
+            </>
           )}
           
           {/* Properties List View */}
           {viewMode === 'list' && (
-            <div className="space-y-4">
-              {currentProperties.map(property => (
-                <PropertyListCard key={property.id} property={property} />
-              ))}
-            </div>
+            <>
+              {filteredProperties.length === 0 ? (
+                <div className="py-12 text-center">
+                  <p className="text-navy-600">Nenhum imóvel corresponde aos critérios de busca.</p>
+                  <Button variant="outline" className="mt-4">Limpar filtros</Button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {currentProperties.map(property => (
+                    <PropertyListCard key={property.id} property={property} />
+                  ))}
+                </div>
+              )}
+            </>
           )}
           
           {/* Properties Map View */}
           {viewMode === 'map' && (
-            <PropertyMap properties={mockProperties} />
+            <PropertyMap properties={filteredProperties} />
           )}
           
           {/* Pagination (only show for grid and list views) */}
-          {viewMode !== 'map' && (
+          {viewMode !== 'map' && filteredProperties.length > 0 && (
             <Pagination className="mt-8">
               <PaginationContent>
                 {currentPage > 1 && (

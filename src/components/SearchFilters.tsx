@@ -6,14 +6,19 @@ import { Slider } from '@/components/ui/slider';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
-import { Search, Filter, Home, MapPin } from 'lucide-react';
+import { Filter, Home, MapPin } from 'lucide-react';
 import { PropertyType } from '../types/property';
+import AutocompleteSearch from './AutocompleteSearch';
+import { useNavigate } from 'react-router-dom';
 
 const SearchFilters: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [priceRange, setPriceRange] = useState([0, 1000000]);
   const [areaRange, setAreaRange] = useState([0, 500]);
   const [selectedTypes, setSelectedTypes] = useState<PropertyType[]>([]);
+  const [propertyType, setPropertyType] = useState<string>('');
+  const [transactionType, setTransactionType] = useState<string>('');
+  const navigate = useNavigate();
   
   const togglePropertyType = (type: PropertyType) => {
     if (selectedTypes.includes(type)) {
@@ -23,22 +28,60 @@ const SearchFilters: React.FC = () => {
     }
   };
   
+  const handleSearch = (searchQuery: string) => {
+    // Build the search query parameters
+    const params = new URLSearchParams();
+    
+    if (searchQuery) {
+      params.append('search', searchQuery);
+    }
+    
+    if (propertyType) {
+      params.append('type', propertyType);
+    }
+    
+    if (transactionType) {
+      params.append('transaction', transactionType);
+    }
+    
+    if (selectedTypes.length > 0) {
+      params.append('propertyTypes', selectedTypes.join(','));
+    }
+    
+    params.append('minPrice', priceRange[0].toString());
+    params.append('maxPrice', priceRange[1].toString());
+    params.append('minArea', areaRange[0].toString());
+    params.append('maxArea', areaRange[1].toString());
+    
+    // Navigate to the properties page with the search parameters
+    navigate(`/properties?${params.toString()}`);
+  };
+  
+  const handleApplyFilters = () => {
+    handleSearch('');
+  };
+  
+  const handleClearFilters = () => {
+    setPropertyType('');
+    setTransactionType('');
+    setSelectedTypes([]);
+    setPriceRange([0, 1000000]);
+    setAreaRange([0, 500]);
+  };
+  
   return (
     <div className="bg-white rounded-xl shadow-md p-6">
       <div className="flex flex-col space-y-6">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="w-full md:w-1/3 relative">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input 
-                placeholder="Cidade, bairro ou endereço" 
-                className="w-full pl-10"
-              />
-            </div>
+            <AutocompleteSearch 
+              onSearch={handleSearch}
+              className="w-full"
+            />
           </div>
           
           <div className="w-full md:w-1/4">
-            <Select>
+            <Select value={propertyType} onValueChange={setPropertyType}>
               <SelectTrigger>
                 <SelectValue placeholder="Tipo de imóvel" />
               </SelectTrigger>
@@ -53,7 +96,7 @@ const SearchFilters: React.FC = () => {
           </div>
           
           <div className="w-full md:w-1/4">
-            <Select>
+            <Select value={transactionType} onValueChange={setTransactionType}>
               <SelectTrigger>
                 <SelectValue placeholder="Comprar ou Alugar" />
               </SelectTrigger>
@@ -66,8 +109,10 @@ const SearchFilters: React.FC = () => {
           </div>
           
           <div className="w-full md:w-1/6">
-            <Button className="w-full bg-navy-700 hover:bg-navy-600">
-              <Search className="mr-2 h-4 w-4" />
+            <Button 
+              className="w-full bg-navy-700 hover:bg-navy-600"
+              onClick={handleSearch.bind(null, '')}
+            >
               Buscar
             </Button>
           </div>
@@ -92,7 +137,7 @@ const SearchFilters: React.FC = () => {
               </label>
               <div className="px-3">
                 <Slider
-                  defaultValue={[0, 1000000]}
+                  value={priceRange}
                   max={2000000}
                   step={50000}
                   onValueChange={(value) => setPriceRange(value as number[])}
@@ -145,7 +190,7 @@ const SearchFilters: React.FC = () => {
               </label>
               <div className="px-3">
                 <Slider
-                  defaultValue={[0, 500]}
+                  value={areaRange}
                   max={1000}
                   step={10}
                   onValueChange={(value) => setAreaRange(value as number[])}
@@ -232,8 +277,16 @@ const SearchFilters: React.FC = () => {
             </div>
             
             <div className="md:col-span-3 pt-4 flex justify-end space-x-2">
-              <Button variant="outline">Limpar Filtros</Button>
-              <Button className="bg-navy-700 hover:bg-navy-600">
+              <Button 
+                variant="outline"
+                onClick={handleClearFilters}
+              >
+                Limpar Filtros
+              </Button>
+              <Button 
+                className="bg-navy-700 hover:bg-navy-600"
+                onClick={handleApplyFilters}
+              >
                 Aplicar Filtros
               </Button>
             </div>

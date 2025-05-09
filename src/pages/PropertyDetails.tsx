@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Heart, Share, MapPin, Calendar, Home, Ruler, Bed, Bath, Car, Info, User } from 'lucide-react';
+import PropertyContactForm from '../components/PropertyContactForm';
 
 const PropertyDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -175,27 +176,12 @@ const PropertyDetails: React.FC = () => {
                     {property.priceType === 'rent' && <span className="text-base font-normal">/mês</span>}
                   </p>
                 </div>
-                
-                <Button className="w-full mb-3 bg-navy-700 hover:bg-navy-600">
-                  Entrar em contato
-                </Button>
-                
-                <Button variant="outline" className="w-full">
-                  Ver telefone
-                </Button>
-                
-                <div className="mt-6 pt-6 border-t">
-                  <h3 className="font-semibold text-navy-800 mb-2">Anunciante</h3>
-                  <div className="flex items-center">
-                    <div className="bg-navy-100 w-12 h-12 rounded-full flex items-center justify-center text-navy-700 mr-3">
-                      <User className="h-6 w-6" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-navy-800">Corretor Exemplo</p>
-                      <p className="text-sm text-navy-600">Membro desde Jun 2023</p>
-                    </div>
-                  </div>
-                </div>
+
+                {/* Contact form */}
+                <PropertyContactForm 
+                  propertyId={property.id} 
+                  propertyTitle={property.title}
+                />
               </div>
             </div>
           </div>
