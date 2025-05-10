@@ -1,10 +1,6 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Home, Heart, User, Search, Menu, UserPlus } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { useAuth } from '@/contexts/AuthContext';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,204 +8,216 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet';
-import AuthDialog from './auth/AuthDialog';
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { useAuth } from '@/contexts/AuthContext';
+import { 
+  Home, 
+  Search, 
+  Heart, 
+  User, 
+  LogOut, 
+  Settings, 
+  Menu, 
+  X, 
+  Building, 
+  Plus, 
+  ListFilter, 
+  Store,
+  CreditCard,
+  Users
+} from 'lucide-react';
 
-const Navbar: React.FC = () => {
+const Navbar = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { user, isAuthenticated, logout } = useAuth();
-  const [authDialogOpen, setAuthDialogOpen] = useState(false);
 
-  const getInitials = (name: string) => {
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .substring(0, 2);
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const toggleSearch = () => {
+    setIsSearchOpen(!isSearchOpen);
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white border-b shadow-sm">
-      <div className="container flex items-center justify-between h-16 px-4 mx-auto">
-        <Link to="/" className="flex items-center space-x-2">
-          <Home className="w-6 h-6 text-navy-700" />
-          <span className="text-xl font-bold text-navy-700">Achei meu Lar</span>
-        </Link>
-
-        <nav className="hidden md:flex items-center space-x-6">
-          <Link to="/" className="text-navy-700 hover:text-navy-500 font-medium">
-            Início
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-16 items-center justify-between">
+        <div className="flex items-center gap-8">
+          <Link to="/" className="flex items-center gap-2">
+            <Home className="h-6 w-6 text-primary" />
+            <span className="text-xl font-bold">ImóveisApp</span>
           </Link>
-          <Link to="/properties" className="text-navy-700 hover:text-navy-500 font-medium">
-            Imóveis
-          </Link>
-          <Link to="/favorites" className="text-navy-700 hover:text-navy-500 font-medium">
-            Favoritos
-          </Link>
-          <Link to="/about" className="text-navy-700 hover:text-navy-500 font-medium">
-            Sobre
-          </Link>
-          {isAuthenticated && user?.type === 'owner' && (
-            <Link to="/register-property" className="text-navy-700 hover:text-navy-500 font-medium">
-              Anunciar Imóvel
+          <nav className="hidden md:flex gap-6">
+            <Link to="/properties" className="text-sm font-medium transition-colors hover:text-primary">
+              Comprar
             </Link>
+            <Link to="/properties" className="text-sm font-medium transition-colors hover:text-primary">
+              Alugar
+            </Link>
+            <Link to="/properties" className="text-sm font-medium transition-colors hover:text-primary">
+              Lançamentos
+            </Link>
+            <Link to="/properties" className="text-sm font-medium transition-colors hover:text-primary">
+              Bairros
+            </Link>
+          </nav>
+        </div>
+        
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" size="icon" onClick={toggleSearch}>
+            <Search className="h-5 w-5" />
+          </Button>
+          
+          {isAuthenticated && user?.type === 'owner' && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <Store className="h-4 w-4 mr-2" />
+                  <span className="hidden md:inline">Anunciante</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>Gestão de anúncios</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/property-registration">
+                    <Plus className="mr-2 h-4 w-4" />
+                    <span>Novo anúncio</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/properties">
+                    <ListFilter className="mr-2 h-4 w-4" />
+                    <span>Meus anúncios</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuLabel>Planos e assinaturas</DropdownMenuLabel>
+                <DropdownMenuItem asChild>
+                  <Link to="/subscriptions">
+                    <CreditCard className="mr-2 h-4 w-4" />
+                    <span>Planos de anunciante</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/partnerships">
+                    <Users className="mr-2 h-4 w-4" />
+                    <span>Parcerias</span>
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
-        </nav>
-
-        <div className="flex items-center space-x-4">
+          
           {isAuthenticated ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="rounded-full h-10 w-10 p-0">
-                  <Avatar>
-                    <AvatarImage src={user?.photoUrl} alt={user?.name} />
-                    <AvatarFallback>{user?.name ? getInitials(user.name) : 'U'}</AvatarFallback>
-                  </Avatar>
+                <Button variant="ghost" size="icon" className="rounded-full">
+                  {user?.photoUrl ? (
+                    <img 
+                      src={user.photoUrl} 
+                      alt={user.name} 
+                      className="h-8 w-8 rounded-full object-cover"
+                    />
+                  ) : (
+                    <User className="h-5 w-5" />
+                  )}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="min-w-[200px]">
+              <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
-                <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link to="/profile">Perfil</Link>
+                  <Link to="/profile">
+                    <User className="mr-2 h-4 w-4" />
+                    <span>Perfil</span>
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/favorites">Favoritos</Link>
+                  <Link to="/favorites">
+                    <Heart className="mr-2 h-4 w-4" />
+                    <span>Favoritos</span>
+                  </Link>
                 </DropdownMenuItem>
-                {user?.type === 'owner' && (
-                  <DropdownMenuItem asChild>
-                    <Link to="/my-properties">Meus Anúncios</Link>
-                  </DropdownMenuItem>
-                )}
+                <DropdownMenuItem asChild>
+                  <Link to="/profile/edit">
+                    <Settings className="mr-2 h-4 w-4" />
+                    <span>Configurações</span>
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => logout()}>
-                  Sair
+                <DropdownMenuItem onClick={logout}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Sair</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <>
-              <Button 
-                variant="outline" 
-                className="hidden md:flex items-center space-x-2"
-                onClick={() => setAuthDialogOpen(true)}
-              >
-                <User className="w-4 h-4" />
-                <span>Entrar</span>
+            <div className="hidden md:flex gap-2">
+              <Button variant="ghost" asChild>
+                <Link to="/login">Entrar</Link>
               </Button>
-              <Button 
-                className="hidden md:flex bg-navy-700 hover:bg-navy-600"
-                onClick={() => setAuthDialogOpen(true)}
-              >
-                <UserPlus className="w-4 h-4 mr-2" />
-                Cadastrar
+              <Button asChild>
+                <Link to="/register">Cadastrar</Link>
               </Button>
-            </>
+            </div>
           )}
-
-          {/* Mobile menu */}
-          <div className="md:hidden">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="outline" size="icon">
-                  <Menu />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-[300px]">
-                <SheetHeader>
-                  <SheetTitle>Menu</SheetTitle>
-                </SheetHeader>
-                <div className="flex flex-col space-y-4 mt-6">
-                  <Link to="/" className="px-4 py-2 hover:bg-gray-100 rounded-md">
-                    Início
-                  </Link>
-                  <Link to="/properties" className="px-4 py-2 hover:bg-gray-100 rounded-md">
-                    Imóveis
-                  </Link>
-                  <Link to="/favorites" className="px-4 py-2 hover:bg-gray-100 rounded-md">
-                    Favoritos
-                  </Link>
-                  <Link to="/about" className="px-4 py-2 hover:bg-gray-100 rounded-md">
-                    Sobre
-                  </Link>
-                  {isAuthenticated && user?.type === 'owner' && (
-                    <Link to="/register-property" className="px-4 py-2 hover:bg-gray-100 rounded-md">
-                      Anunciar Imóvel
-                    </Link>
-                  )}
-                  
-                  {isAuthenticated ? (
-                    <>
-                      <Link to="/profile" className="px-4 py-2 hover:bg-gray-100 rounded-md">
-                        Meu Perfil
-                      </Link>
-                      <button 
-                        onClick={() => logout()}
-                        className="px-4 py-2 text-left text-red-600 hover:bg-red-50 rounded-md"
-                      >
-                        Sair
-                      </button>
-                    </>
-                  ) : (
-                    <div className="space-y-2 px-4 pt-4 border-t">
-                      <Button 
-                        className="w-full" 
-                        onClick={() => setAuthDialogOpen(true)}
-                      >
-                        Entrar
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        className="w-full"
-                        onClick={() => {
-                          setAuthDialogOpen(true);
-                        }}
-                      >
-                        Cadastrar
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              </SheetContent>
-            </Sheet>
-          </div>
-        </div>
-        
-        {/* Mobile navigation (bottom bar) */}
-        <div className="flex md:hidden">
-          <nav className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around h-16 px-4 bg-white border-t">
-            <Link to="/" className="flex flex-col items-center justify-center">
-              <Home className="w-6 h-6 text-navy-700" />
-              <span className="text-xs mt-1">Início</span>
-            </Link>
-            <Link to="/properties" className="flex flex-col items-center justify-center">
-              <Search className="w-6 h-6 text-navy-700" />
-              <span className="text-xs mt-1">Buscar</span>
-            </Link>
-            <Link to="/favorites" className="flex flex-col items-center justify-center">
-              <Heart className="w-6 h-6 text-navy-700" />
-              <span className="text-xs mt-1">Favoritos</span>
-            </Link>
-            <Link to="/profile" className="flex flex-col items-center justify-center">
-              <User className="w-6 h-6 text-navy-700" />
-              <span className="text-xs mt-1">Conta</span>
-            </Link>
-          </nav>
+          
+          <Button variant="ghost" size="icon" className="md:hidden" onClick={toggleMenu}>
+            {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
         </div>
       </div>
-
-      {/* Auth Dialog */}
-      <AuthDialog 
-        open={authDialogOpen} 
-        onOpenChange={setAuthDialogOpen} 
-      />
+      
+      {/* Mobile menu */}
+      {isMenuOpen && (
+        <div className="md:hidden border-t p-4">
+          <nav className="flex flex-col space-y-4">
+            <Link to="/properties" className="text-sm font-medium" onClick={toggleMenu}>
+              Comprar
+            </Link>
+            <Link to="/properties" className="text-sm font-medium" onClick={toggleMenu}>
+              Alugar
+            </Link>
+            <Link to="/properties" className="text-sm font-medium" onClick={toggleMenu}>
+              Lançamentos
+            </Link>
+            <Link to="/properties" className="text-sm font-medium" onClick={toggleMenu}>
+              Bairros
+            </Link>
+            {!isAuthenticated && (
+              <>
+                <hr className="my-2" />
+                <Link to="/login" className="text-sm font-medium" onClick={toggleMenu}>
+                  Entrar
+                </Link>
+                <Link to="/register" className="text-sm font-medium" onClick={toggleMenu}>
+                  Cadastrar
+                </Link>
+              </>
+            )}
+          </nav>
+        </div>
+      )}
+      
+      {/* Search overlay */}
+      {isSearchOpen && (
+        <div className="absolute inset-x-0 top-16 bg-background border-b p-4 shadow-lg">
+          <div className="container mx-auto flex items-center gap-2">
+            <Input 
+              type="search" 
+              placeholder="Buscar por localização, tipo de imóvel..." 
+              className="flex-1"
+              autoFocus
+            />
+            <Button>Buscar</Button>
+            <Button variant="ghost" size="icon" onClick={toggleSearch}>
+              <X className="h-5 w-5" />
+            </Button>
+          </div>
+        </div>
+      )}
     </header>
   );
 };

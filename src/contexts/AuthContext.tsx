@@ -169,7 +169,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Update in mock database
       const userIndex = mockUsers.findIndex(u => u.id === user.id);
       if (userIndex !== -1) {
-        mockUsers[userIndex] = { ...mockUsers[userIndex], ...data };
+        mockUsers[userIndex] = { ...mockUsers[userIndex], ...data, password: mockUsers[userIndex].password };
       }
       
       toast.success('Perfil atualizado com sucesso!');

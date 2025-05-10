@@ -1,43 +1,47 @@
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Index from './pages/Index';
+import Properties from './pages/Properties';
+import PropertyDetails from './pages/PropertyDetails';
+import PropertyRegistration from './pages/PropertyRegistration';
+import Profile from './pages/Profile';
+import ProfileEdit from './pages/ProfileEdit';
+import Favorites from './pages/Favorites';
+import NotFound from './pages/NotFound';
+import { AuthProvider } from './contexts/AuthContext';
+import { Toaster } from '@/components/ui/sonner';
+import Subscriptions from './pages/Subscriptions';
+import Payment from './pages/Payment';
+import PaymentSuccess from './pages/PaymentSuccess';
+import Partnerships from './pages/Partnerships';
+import ListingHighlight from './pages/ListingHighlight';
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./contexts/AuthContext";
-import Index from "./pages/Index";
-import Properties from "./pages/Properties";
-import PropertyDetails from "./pages/PropertyDetails";
-import Favorites from "./pages/Favorites";
-import Profile from "./pages/Profile";
-import ProfileEdit from "./pages/ProfileEdit";
-import NotFound from "./pages/NotFound";
-import PropertyRegistration from "./pages/PropertyRegistration";
-
-const queryClient = new QueryClient();
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <TooltipProvider>
+const App = () => {
+  return (
+    <Router>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/properties" element={<Properties />} />
+          <Route path="/property/:id" element={<PropertyDetails />} />
+          <Route path="/property-registration" element={<PropertyRegistration />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/edit" element={<ProfileEdit />} />
+          <Route path="/favorites" element={<Favorites />} />
+          
+          {/* New monetization routes */}
+          <Route path="/subscriptions" element={<Subscriptions />} />
+          <Route path="/payment/:planId" element={<Payment />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/partnerships" element={<Partnerships />} />
+          <Route path="/listing-highlight" element={<ListingHighlight />} />
+          
+          <Route path="*" element={<NotFound />} />
+        </Routes>
         <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/properties" element={<Properties />} />
-            <Route path="/property/:id" element={<PropertyDetails />} />
-            <Route path="/favorites" element={<Favorites />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/profile/edit" element={<ProfileEdit />} />
-            <Route path="/register-property" element={<PropertyRegistration />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </AuthProvider>
-  </QueryClientProvider>
-);
+      </AuthProvider>
+    </Router>
+  );
+}
 
 export default App;

@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PropertyType, PropertyStatus } from '@/types/property';
-import { toast } from '@/hooks/use-toast';
+import { toast } from '@/components/ui/sonner';
 
 // Define the form schema
 const formSchema = z.object({
@@ -95,12 +95,22 @@ const PropertyRegistrationForm: React.FC = () => {
       console.log('Floor plan:', planImage);
       console.log('Listing type:', listingType);
       
-      // Simulate successful submission
+      if (listingType === 'paid') {
+        // Navigate to highlight options
+        navigate('/listing-highlight', { 
+          state: { 
+            propertyData: data,
+            images: images ? Array.from(images).map(img => img.name) : [],
+            planImage: planImage ? planImage.name : null
+          }
+        });
+        return;
+      }
+      
+      // Simulate successful submission for free listing
       toast({
         title: "Imóvel cadastrado com sucesso!",
-        description: listingType === 'paid' ? 
-          "Seu anúncio com destaque está em análise e será publicado em breve." : 
-          "Seu anúncio foi publicado e já está disponível para visualização.",
+        description: "Seu anúncio foi publicado e já está disponível para visualização.",
       });
       
       // Redirect to dashboard or property listing
@@ -521,7 +531,7 @@ const PropertyRegistrationForm: React.FC = () => {
                         Visibilidade por 60 dias, aparecendo nos destaques da plataforma e recebendo selo especial.
                       </p>
                       <p className="text-sm font-medium text-primary mt-2">
-                        R$ 79,90
+                        A partir de R$ 29,90
                       </p>
                     </div>
                   </div>
@@ -550,7 +560,7 @@ const PropertyRegistrationForm: React.FC = () => {
               Cancelar
             </Button>
             <Button type="submit">
-              Publicar Anúncio
+              {listingType === 'free' ? 'Publicar Anúncio' : 'Próximo: Selecionar Destaque'}
             </Button>
           </div>
         </form>
