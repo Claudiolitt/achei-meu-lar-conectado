@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Home } from 'lucide-react';
@@ -24,11 +23,11 @@ const SplashScreen: React.FC = () => {
   }, [navigate]);
   
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-blue-500 to-blue-700">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-navy-900 to-navy-950">
       <div className="text-center animate-pulse">
         <div className="inline-flex items-center mb-8">
           <Home className="h-16 w-16 text-white" />
-          <span className="text-4xl font-bold text-white ml-4">Achei meu Lar</span>
+          <span className="text-4xl font-bold text-white ml-4">Imóveis Conecta</span>
         </div>
         <p className="text-white text-xl">Encontre o imóvel dos seus sonhos</p>
       </div>

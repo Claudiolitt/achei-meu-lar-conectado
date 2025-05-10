@@ -1,4 +1,3 @@
-
 export type PropertyType = 'apartment' | 'house' | 'commercial' | 'land';
 
 export type PropertyStatus = 'sale' | 'rent';
@@ -23,6 +22,8 @@ export interface Property {
     parkingSpots: number;
     buildYear: number;
     furnished: boolean;
+    condominiumFee?: number; // valor do condomínio
+    iptu?: number; // valor do IPTU
   };
   type: PropertyType;
   images: string[];

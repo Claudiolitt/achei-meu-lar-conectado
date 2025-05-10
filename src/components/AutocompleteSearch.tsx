@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -138,11 +137,10 @@ const AutocompleteSearch: React.FC<AutocompleteSearchProps> = ({
         />
         <Button
           onClick={handleSearch}
-          className="absolute right-0 top-0 h-full rounded-l-none"
+          className="absolute right-0 top-0 h-full w-10 flex items-center justify-center rounded-l-none bg-navy-700 hover:bg-navy-800 text-white dark:bg-black dark:text-white dark:hover:bg-white dark:hover:text-black"
           type="button"
         >
           <Search className="h-4 w-4" />
-          <span className="ml-2 hidden sm:inline">Buscar</span>
         </Button>
       </div>
       

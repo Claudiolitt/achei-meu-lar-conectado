@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -36,10 +35,13 @@ import {
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useIsMobile } from '@/hooks/use-mobile';
+import AuthDialog from './auth/AuthDialog';
+import Logo from './Logo';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
   const { user, isAuthenticated, logout } = useAuth();
   const isMobile = useIsMobile();
 
@@ -60,8 +62,7 @@ const Navbar = () => {
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-8">
           <Link to="/" className="flex items-center gap-2">
-            <Home className="h-6 w-6 text-primary" />
-            <span className="text-xl font-bold">ImóveisApp</span>
+            <Logo />
           </Link>
           <nav className="hidden md:flex gap-6" aria-label="Navegação Principal">
             <Link to="/properties" className="text-sm font-medium transition-colors hover:text-primary focus-visible:text-primary focus-visible:outline-none focus-visible:underline">
@@ -238,11 +239,8 @@ const Navbar = () => {
             </DropdownMenu>
           ) : (
             <div className="hidden md:flex gap-2">
-              <Button variant="ghost" asChild>
-                <Link to="/login">Entrar</Link>
-              </Button>
-              <Button asChild>
-                <Link to="/register">Cadastrar</Link>
+              <Button onClick={() => setIsAuthDialogOpen(true)}>
+                Entrar / Cadastrar
               </Button>
             </div>
           )}
@@ -250,10 +248,9 @@ const Navbar = () => {
           <Button 
             variant="ghost" 
             size="icon" 
-            className="md:hidden"
+            className="md:hidden" 
             onClick={toggleMenu}
-            aria-expanded={isMenuOpen}
-            aria-label="Menu"
+            aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
           >
             {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
@@ -262,50 +259,33 @@ const Navbar = () => {
       
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="md:hidden border-t p-4" role="region" aria-label="Menu móvel">
-          <nav className="flex flex-col space-y-4">
-            <Link to="/properties" className="text-sm font-medium" onClick={toggleMenu}>
+        <div className="md:hidden">
+          <nav className="container py-4 space-y-4">
+            <Link to="/properties" className="block text-sm font-medium">
               Comprar
             </Link>
-            <Link to="/properties" className="text-sm font-medium" onClick={toggleMenu}>
+            <Link to="/properties" className="block text-sm font-medium">
               Alugar
             </Link>
-            <Link to="/properties" className="text-sm font-medium" onClick={toggleMenu}>
+            <Link to="/properties" className="block text-sm font-medium">
               Lançamentos
             </Link>
-            <Link to="/mortgage-calculator" className="text-sm font-medium" onClick={toggleMenu}>
+            <Link to="/mortgage-calculator" className="block text-sm font-medium">
               Calculadora de Financiamento
             </Link>
-            <Link to="/news" className="text-sm font-medium" onClick={toggleMenu}>
+            <Link to="/news" className="block text-sm font-medium">
               Notícias do Mercado
             </Link>
-            {isAuthenticated && (
-              <>
-                <Separator />
-                <Link to="/profile" className="text-sm font-medium" onClick={toggleMenu}>
-                  Meu Perfil
-                </Link>
-                <Link to="/favorites" className="text-sm font-medium" onClick={toggleMenu}>
-                  Favoritos
-                </Link>
-                <Link to="/notifications" className="text-sm font-medium" onClick={toggleMenu}>
-                  Notificações
-                </Link>
-                <Link to="/chat" className="text-sm font-medium" onClick={toggleMenu}>
-                  Chat
-                </Link>
-              </>
-            )}
             {!isAuthenticated && (
-              <>
-                <Separator />
-                <Link to="/login" className="text-sm font-medium" onClick={toggleMenu}>
-                  Entrar
-                </Link>
-                <Link to="/register" className="text-sm font-medium" onClick={toggleMenu}>
-                  Cadastrar
-                </Link>
-              </>
+              <Button 
+                className="w-full" 
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  setIsAuthDialogOpen(true);
+                }}
+              >
+                Entrar / Cadastrar
+              </Button>
             )}
           </nav>
         </div>
@@ -313,22 +293,27 @@ const Navbar = () => {
       
       {/* Search overlay */}
       {isSearchOpen && (
-        <div className="absolute inset-x-0 top-16 bg-background border-b p-4 shadow-lg" role="search">
-          <div className="container mx-auto flex items-center gap-2">
-            <Input 
-              type="search" 
-              placeholder="Buscar por localização, tipo de imóvel..." 
-              className="flex-1"
-              aria-label="Buscar imóveis"
-              autoFocus
-            />
-            <Button>Buscar</Button>
-            <Button variant="ghost" size="icon" onClick={toggleSearch} aria-label="Fechar busca">
-              <X className="h-5 w-5" />
-            </Button>
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50">
+          <div className="container py-4">
+            <div className="flex items-center gap-4">
+              <Input
+                type="search"
+                placeholder="Buscar imóveis..."
+                className="flex-1"
+                autoFocus
+              />
+              <Button variant="ghost" size="icon" onClick={toggleSearch}>
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
           </div>
         </div>
       )}
+
+      <AuthDialog 
+        open={isAuthDialogOpen} 
+        onOpenChange={setIsAuthDialogOpen} 
+      />
     </header>
   );
 };

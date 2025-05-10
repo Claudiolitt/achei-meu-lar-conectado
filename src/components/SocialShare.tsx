@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Share2, Facebook, Twitter, Linkedin, Copy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -20,8 +19,8 @@ interface SocialShareProps {
 
 const SocialShare: React.FC<SocialShareProps> = ({
   url = window.location.href,
-  title = 'Achei meu Lar - Encontre seu imóvel ideal',
-  description = 'Confira este imóvel no Achei meu Lar',
+  title = 'Imóveis Conecta - Encontre seu imóvel ideal',
+  description = 'Confira este imóvel no Imóveis Conecta',
   image,
   className = '',
 }) => {
@@ -84,7 +83,7 @@ const SocialShare: React.FC<SocialShareProps> = ({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuItem onClick={shareOnFacebook} className="cursor-pointer">
-          <Facebook className="mr-2 h-4 w-4 text-blue-600" />
+          <Facebook className="mr-2 h-4 w-4 text-navy-900" />
           <span>Facebook</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={shareOnTwitter} className="cursor-pointer">
@@ -92,7 +91,7 @@ const SocialShare: React.FC<SocialShareProps> = ({
           <span>Twitter</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={shareOnLinkedIn} className="cursor-pointer">
-          <Linkedin className="mr-2 h-4 w-4 text-blue-700" />
+          <Linkedin className="mr-2 h-4 w-4 text-navy-900" />
           <span>LinkedIn</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={shareOnWhatsApp} className="cursor-pointer">

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -106,7 +105,7 @@ const Properties: React.FC = () => {
       
       <main className="flex-grow">
         {/* Search Filters */}
-        <section className="bg-gray-50 py-6">
+        <section className="bg-white dark:bg-[#18223a] py-6">
           <div className="container mx-auto px-4">
             <SearchFilters />
           </div>

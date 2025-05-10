@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -15,13 +14,13 @@ const TermsOfService: React.FC = () => {
         <div className="prose max-w-none">
           <h2>1. Aceitação dos Termos</h2>
           <p>
-            Ao acessar e usar o serviço Achei meu Lar, você concorda com os termos e condições descritos neste documento.
+            Ao acessar e usar o serviço Imóveis Conecta, você concorda com os termos e condições descritos neste documento.
             Se você não concorda com algum destes termos, não utilize nosso serviço.
           </p>
           
           <h2>2. Descrição do Serviço</h2>
           <p>
-            O Achei meu Lar é uma plataforma que conecta pessoas interessadas em imóveis com proprietários e anunciantes.
+            O Imóveis Conecta é uma plataforma que conecta pessoas interessadas em imóveis com proprietários e anunciantes.
             Nossa plataforma permite buscar, anunciar e entrar em contato sobre imóveis disponíveis para venda ou aluguel.
           </p>
           
@@ -39,14 +38,14 @@ const TermsOfService: React.FC = () => {
           
           <h2>5. Limitação de Responsabilidade</h2>
           <p>
-            O Achei meu Lar não se responsabiliza pela veracidade das informações apresentadas nos anúncios,
+            O Imóveis Conecta não se responsabiliza pela veracidade das informações apresentadas nos anúncios,
             por eventuais negociações entre os usuários ou por danos decorrentes do uso da plataforma.
           </p>
           
           <h2>6. Propriedade Intelectual</h2>
           <p>
             Todo o conteúdo disponibilizado pela plataforma, como textos, gráficos, logotipos, ícones e
-            imagens, são propriedade do Achei meu Lar e estão protegidos por leis de direitos autorais.
+            imagens, são propriedade do Imóveis Conecta e estão protegidos por leis de direitos autorais.
           </p>
           
           <h2>7. Modificações nos Termos</h2>

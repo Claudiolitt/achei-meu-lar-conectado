@@ -1,13 +1,21 @@
-
 export interface User {
   id: string;
   name: string;
   email: string;
   phone?: string;
   cpf?: string;
-  type: 'client' | 'owner';
-  photoUrl?: string;
+  avatar?: string;
   verified: boolean;
+  preferences?: {
+    propertyTypes: string[];
+    budgetRange: {
+      min: number;
+      max: number;
+    };
+    preferredLocations: string[];
+    timeline: string;
+    additionalPreferences: string[];
+  };
 }
 
 export interface RegisterData {
@@ -16,7 +24,6 @@ export interface RegisterData {
   password: string;
   phone?: string;
   cpf?: string;
-  type: 'client' | 'owner';
 }
 
 export interface AuthContextType {
@@ -26,8 +33,8 @@ export interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   register: (userData: RegisterData) => Promise<void>;
-  updateProfile: (data: Partial<User>) => Promise<void>;
+  updateProfile: (data: FormData) => Promise<void>;
+  updatePreferences: (preferences: User['preferences']) => Promise<void>;
   sendPasswordResetEmail: (email: string) => Promise<void>;
   verifyEmail: () => Promise<void>;
-  setUserType: (type: 'client' | 'owner') => Promise<void>;
 }

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
@@ -19,25 +18,24 @@ const Index: React.FC = () => {
   }).slice(0, 3);
   
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-[#f8fafc] dark:bg-[#0e1624] transition-colors">
       <Navbar />
       
       <main className="flex-grow">
         <Hero />
         
-        <section className="container mx-auto px-4 -mt-8 relative z-20">
+        <section className="container mx-auto px-4 -mt-8 relative z-20 bg-[#fff] dark:bg-[#18223a] rounded-xl transition-colors">
           <SearchFilters />
         </section>
         
         {/* Featured Properties */}
-        <section className="container mx-auto px-4 py-16">
+        <section className="container mx-auto px-4 py-16 bg-[#fff] dark:bg-[#0e1624] rounded-xl transition-colors">
           <div className="flex justify-between items-center mb-8">
-            <h2 className="text-2xl font-bold text-navy-800">Imóveis em Destaque</h2>
-            <Button variant="outline" className="text-navy-700">
+            <h2 className="text-2xl font-bold text-navy-800 dark:text-white">Imóveis em Destaque</h2>
+            <Button variant="outline" className="text-navy-700 dark:text-white border-navy-200 dark:border-[#232c43]">
               Ver todos
             </Button>
           </div>
-          
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {featuredProperties.map(property => (
               <PropertyCard key={property.id} property={property} />
@@ -46,14 +44,13 @@ const Index: React.FC = () => {
         </section>
         
         {/* Recent Properties */}
-        <section className="container mx-auto px-4 py-16 bg-gray-50">
+        <section className="container mx-auto px-4 py-16 bg-[#fff] dark:bg-[#0e1624] rounded-xl transition-colors">
           <div className="flex justify-between items-center mb-8">
-            <h2 className="text-2xl font-bold text-navy-800">Imóveis Recentes</h2>
-            <Button variant="outline" className="text-navy-700">
+            <h2 className="text-2xl font-bold text-navy-800 dark:text-white">Imóveis Recentes</h2>
+            <Button variant="outline" className="text-navy-700 dark:text-white border-navy-200 dark:border-[#232c43]">
               Ver todos
             </Button>
           </div>
-          
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {recentProperties.map(property => (
               <PropertyCard key={property.id} property={property} />
@@ -62,37 +59,37 @@ const Index: React.FC = () => {
         </section>
         
         {/* App Features */}
-        <section className="bg-navy-700 py-16 text-white">
+        <section className="bg-navy-700 dark:bg-[#18223a] py-16 text-white transition-colors">
           <div className="container mx-auto px-4">
-            <h2 className="text-2xl font-bold text-center mb-12">Por que escolher Achei meu Lar?</h2>
+            <h2 className="text-2xl font-bold text-center mb-12">Por que escolher Imóveis Conecta?</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="text-center p-6">
-                <div className="bg-navy-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <div className="bg-navy-600 dark:bg-[#2d3a5a] rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <Search className="w-8 h-8" />
                 </div>
                 <h3 className="text-xl font-semibold mb-3">Busca Inteligente</h3>
-                <p className="text-navy-100">
+                <p className="text-navy-100 dark:text-[#b0b8c9]">
                   Encontre exatamente o que procura com nossos filtros avançados e busca inteligente.
                 </p>
               </div>
               
               <div className="text-center p-6">
-                <div className="bg-navy-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <div className="bg-navy-600 dark:bg-[#2d3a5a] rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <Home className="w-8 h-8" />
                 </div>
                 <h3 className="text-xl font-semibold mb-3">Anúncios Verificados</h3>
-                <p className="text-navy-100">
+                <p className="text-navy-100 dark:text-[#b0b8c9]">
                   Todos os anúncios são verificados pela nossa equipe para garantir a qualidade.
                 </p>
               </div>
               
               <div className="text-center p-6">
-                <div className="bg-navy-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <div className="bg-navy-600 dark:bg-[#2d3a5a] rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <User className="w-8 h-8" />
                 </div>
                 <h3 className="text-xl font-semibold mb-3">Contato Direto</h3>
-                <p className="text-navy-100">
+                <p className="text-navy-100 dark:text-[#b0b8c9]">
                   Entre em contato diretamente com os anunciantes sem intermediários.
                 </p>
               </div>

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -6,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Form,
   FormControl,
@@ -16,21 +14,23 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { toast } from "@/components/ui/sonner";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Upload } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const profileSchema = z.object({
   name: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
   phone: z.string().optional(),
   cpf: z.string().optional(),
-  type: z.enum(["client", "owner"]),
+  avatar: z.any().optional(),
 });
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
 export default function ProfileForm() {
-  const { user, updateProfile, setUserType } = useAuth();
+  const { user, updateProfile } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(user?.avatar || null);
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
@@ -38,7 +38,7 @@ export default function ProfileForm() {
       name: user?.name || "",
       phone: user?.phone || "",
       cpf: user?.cpf || "",
-      type: user?.type || "client",
+      avatar: null,
     },
   });
 
@@ -59,24 +59,34 @@ export default function ProfileForm() {
       .replace(/(-\d{4})\d+?$/, '$1');
   };
 
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatarPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+      form.setValue("avatar", file);
+    }
+  };
+
   async function onSubmit(values: ProfileFormValues) {
     if (!user) return;
 
     setIsSubmitting(true);
     try {
-      // If user type has changed, update it separately
-      if (values.type !== user.type) {
-        await setUserType(values.type);
-      }
+      const formData = new FormData();
+      formData.append("name", values.name);
+      if (values.phone) formData.append("phone", values.phone);
+      if (values.cpf) formData.append("cpf", values.cpf);
+      if (values.avatar) formData.append("avatar", values.avatar);
 
-      // Update other profile info
-      const { type, ...profileData } = values;
-      await updateProfile(profileData);
-
+      await updateProfile(formData);
       toast.success("Perfil atualizado com sucesso!");
     } catch (error) {
       console.error("Profile update error:", error);
-      // Toast is already shown in the auth context
+      toast.error("Erro ao atualizar perfil. Tente novamente.");
     } finally {
       setIsSubmitting(false);
     }
@@ -113,6 +123,31 @@ export default function ProfileForm() {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <div className="flex flex-col items-center space-y-4">
+            <Avatar className="h-24 w-24">
+              <AvatarImage src={avatarPreview || undefined} />
+              <AvatarFallback>{user.name?.charAt(0).toUpperCase()}</AvatarFallback>
+            </Avatar>
+            <div className="flex items-center space-x-2">
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={handleAvatarChange}
+                className="hidden"
+                id="avatar-upload"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => document.getElementById("avatar-upload")?.click()}
+              >
+                <Upload className="h-4 w-4 mr-2" />
+                Alterar foto
+              </Button>
+            </div>
+          </div>
+
           <FormField
             control={form.control}
             name="name"
@@ -163,46 +198,7 @@ export default function ProfileForm() {
             />
           </div>
 
-          <FormField
-            control={form.control}
-            name="type"
-            render={({ field }) => (
-              <FormItem className="space-y-3">
-                <FormLabel>Tipo de conta</FormLabel>
-                <FormControl>
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    className="flex flex-col space-y-1"
-                  >
-                    <FormItem className="flex items-center space-x-3 space-y-0">
-                      <FormControl>
-                        <RadioGroupItem value="client" />
-                      </FormControl>
-                      <FormLabel className="font-normal">
-                        Cliente (busco imóveis)
-                      </FormLabel>
-                    </FormItem>
-                    <FormItem className="flex items-center space-x-3 space-y-0">
-                      <FormControl>
-                        <RadioGroupItem value="owner" />
-                      </FormControl>
-                      <FormLabel className="font-normal">
-                        Proprietário/Anunciante (quero anunciar imóveis)
-                      </FormLabel>
-                    </FormItem>
-                  </RadioGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <Button
-            type="submit"
-            className="w-full bg-navy-700 hover:bg-navy-600"
-            disabled={isSubmitting}
-          >
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
             {isSubmitting ? "Salvando..." : "Salvar alterações"}
           </Button>
         </form>

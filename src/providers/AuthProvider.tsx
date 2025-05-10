@@ -1,4 +1,3 @@
-
 import { useState, useEffect, ReactNode } from 'react';
 import { toast } from '@/components/ui/sonner';
 import { AuthContext } from '../contexts/AuthContext';
@@ -69,7 +68,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         email: userData.email,
         phone: userData.phone,
         cpf: userData.cpf,
-        type: userData.type,
         verified: false
       };
       
@@ -95,7 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     toast.info('Você saiu da sua conta');
   };
 
-  const updateProfile = async (data: Partial<User>) => {
+  const updateProfile = async (formData: FormData) => {
     setIsLoading(true);
     try {
       // Simulate API call with timeout
@@ -103,15 +101,44 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       if (!user) throw new Error('Usuário não está logado');
       
+      // Get form data
+      const name = formData.get('name') as string;
+      const phone = formData.get('phone') as string;
+      const cpf = formData.get('cpf') as string;
+      const avatarFile = formData.get('avatar') as File | null;
+
+      // Handle avatar upload
+      let avatarUrl = user.avatar;
+      if (avatarFile) {
+        // In a real app, you would upload the file to a storage service
+        // For now, we'll create a data URL
+        const reader = new FileReader();
+        avatarUrl = await new Promise((resolve) => {
+          reader.onloadend = () => resolve(reader.result as string);
+          reader.readAsDataURL(avatarFile);
+        });
+      }
+      
       // Update user data
-      const updatedUser = { ...user, ...data };
+      const updatedUser = { 
+        ...user, 
+        name,
+        phone: phone || undefined,
+        cpf: cpf || undefined,
+        avatar: avatarUrl
+      };
+      
       setUser(updatedUser);
       localStorage.setItem('user', JSON.stringify(updatedUser));
       
       // Update in mock database
       const userIndex = mockUsers.findIndex(u => u.id === user.id);
       if (userIndex !== -1) {
-        mockUsers[userIndex] = { ...mockUsers[userIndex], ...data, password: mockUsers[userIndex].password };
+        mockUsers[userIndex] = { 
+          ...mockUsers[userIndex], 
+          ...updatedUser,
+          password: mockUsers[userIndex].password 
+        };
       }
       
       toast.success('Perfil atualizado com sucesso!');
@@ -166,22 +193,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const setUserType = async (type: 'client' | 'owner') => {
+  const updatePreferences = async (preferences: User['preferences']) => {
     setIsLoading(true);
     try {
       // Simulate API call with timeout
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise(resolve => setTimeout(resolve, 800));
       
       if (!user) throw new Error('Usuário não está logado');
       
-      // Update user type
-      const updatedUser = { ...user, type };
+      // Update user preferences
+      const updatedUser = { ...user, preferences };
       setUser(updatedUser);
       localStorage.setItem('user', JSON.stringify(updatedUser));
       
-      toast.success(`Perfil atualizado para ${type === 'client' ? 'Cliente' : 'Anunciante'}`);
+      // Update in mock database
+      const userIndex = mockUsers.findIndex(u => u.id === user.id);
+      if (userIndex !== -1) {
+        mockUsers[userIndex] = { 
+          ...mockUsers[userIndex], 
+          preferences,
+          password: mockUsers[userIndex].password 
+        };
+      }
+      
+      toast.success('Preferências atualizadas com sucesso!');
     } catch (error) {
-      toast.error('Erro ao atualizar tipo de usuário');
+      toast.error('Erro ao atualizar preferências');
       throw error;
     } finally {
       setIsLoading(false);
@@ -196,10 +233,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     logout,
     register,
     updateProfile,
+    updatePreferences,
     sendPasswordResetEmail,
     verifyEmail,
-    setUserType
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
 }

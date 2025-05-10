@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -190,7 +189,7 @@ const NotificationList = ({ notifications, onMarkAsRead }: NotificationListProps
         >
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-3">
-              {notification.type === 'property' && <Home className="h-5 w-5 text-blue-500 mt-1" />}
+              {notification.type === 'property' && <Home className="h-5 w-5 text-navy-900 mt-1" />}
               {notification.type === 'message' && <MessageCircle className="h-5 w-5 text-green-500 mt-1" />}
               {notification.type === 'system' && <Bell className="h-5 w-5 text-amber-500 mt-1" />}
               

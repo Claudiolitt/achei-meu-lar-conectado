@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -89,7 +88,7 @@ const PropertyContactForm: React.FC<PropertyContactFormProps> = ({
   // Generate WhatsApp link with predefined message
   const getWhatsAppLink = () => {
     const message = encodeURIComponent(
-      `Olá! Vi o seu anúncio "${propertyTitle}" no Achei meu Lar e estou interessado(a) em mais informações.`
+      `Olá! Vi o seu anúncio "${propertyTitle}" no Imóveis Conecta e estou interessado(a) em mais informações.`
     );
     // Format the phone number for WhatsApp (removing non-digits)
     const formattedPhone = ownerPhone.replace(/\D/g, "");
@@ -100,19 +99,19 @@ const PropertyContactForm: React.FC<PropertyContactFormProps> = ({
   const getEmailLink = () => {
     const subject = encodeURIComponent(`Interesse no imóvel: ${propertyTitle}`);
     const body = encodeURIComponent(
-      `Olá!\n\nVi o seu anúncio "${propertyTitle}" no Achei meu Lar e estou interessado(a) em mais informações.\n\nAguardo seu contato.`
+      `Olá!\n\nVi o seu anúncio "${propertyTitle}" no Imóveis Conecta e estou interessado(a) em mais informações.\n\nAguardo seu contato.`
     );
     return `mailto:${ownerEmail}?subject=${subject}&body=${body}`;
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100">
-      <h3 className="text-lg font-semibold mb-4 text-navy-800">Entrar em contato com {ownerName}</h3>
+    <div className="bg-white dark:bg-[#18223a] rounded-lg shadow-sm p-6 border border-gray-100 dark:border-[#232c43]">
+      <h3 className="text-lg font-semibold mb-4 text-navy-800 dark:text-white">Entrar em contato com {ownerName}</h3>
       
       <div className="space-y-4 mb-6">
         <Button 
           variant="outline" 
-          className="w-full flex justify-center items-center"
+          className="w-full flex justify-center items-center text-navy-800 dark:text-white border-navy-100 dark:border-[#232c43] bg-white dark:bg-[#232c43] hover:bg-navy-50 dark:hover:bg-[#232c43]/80 dark:placeholder-white"
           onClick={handleShowPhone}
         >
           <Phone className="mr-2 h-4 w-4" />
@@ -122,7 +121,7 @@ const PropertyContactForm: React.FC<PropertyContactFormProps> = ({
         <div className="grid grid-cols-2 gap-3">
           <Button 
             variant="outline" 
-            className="w-full flex justify-center items-center" 
+            className="w-full flex justify-center items-center text-navy-800 dark:text-white border-navy-100 dark:border-[#232c43] bg-white dark:bg-[#232c43] hover:bg-navy-50 dark:hover:bg-[#232c43]/80 dark:placeholder-white" 
             asChild
           >
             <a href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer">
@@ -133,7 +132,7 @@ const PropertyContactForm: React.FC<PropertyContactFormProps> = ({
           
           <Button 
             variant="outline" 
-            className="w-full flex justify-center items-center"
+            className="w-full flex justify-center items-center text-navy-800 dark:text-white border-navy-100 dark:border-[#232c43] bg-white dark:bg-[#232c43] hover:bg-navy-50 dark:hover:bg-[#232c43]/80 dark:placeholder-white"
             asChild
           >
             <a href={getEmailLink()}>
@@ -144,8 +143,8 @@ const PropertyContactForm: React.FC<PropertyContactFormProps> = ({
         </div>
       </div>
       
-      <div className="border-t border-gray-100 pt-4">
-        <h4 className="font-medium mb-4 flex items-center text-navy-700">
+      <div className="border-t border-gray-100 dark:border-[#232c43] pt-4">
+        <h4 className="font-medium mb-4 flex items-center text-navy-700 dark:text-white">
           <MessageSquare className="mr-2 h-4 w-4" />
           Enviar mensagem
         </h4>
@@ -157,9 +156,9 @@ const PropertyContactForm: React.FC<PropertyContactFormProps> = ({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nome</FormLabel>
+                  <FormLabel className="text-navy-700 dark:text-white">Nome</FormLabel>
                   <FormControl>
-                    <Input placeholder="Seu nome completo" {...field} />
+                    <Input className="bg-white dark:bg-[#232c43] text-navy-800 dark:text-white border border-gray-200 dark:border-[#232c43] placeholder:text-navy-400 dark:placeholder-white" placeholder="Seu nome completo" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -172,9 +171,9 @@ const PropertyContactForm: React.FC<PropertyContactFormProps> = ({
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>E-mail</FormLabel>
+                    <FormLabel className="text-navy-700 dark:text-white">E-mail</FormLabel>
                     <FormControl>
-                      <Input placeholder="seu@email.com" {...field} />
+                      <Input className="bg-white dark:bg-[#232c43] text-navy-800 dark:text-white border border-gray-200 dark:border-[#232c43] placeholder:text-navy-400 dark:placeholder-white" placeholder="seu@email.com" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -186,9 +185,9 @@ const PropertyContactForm: React.FC<PropertyContactFormProps> = ({
                 name="phone"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Telefone</FormLabel>
+                    <FormLabel className="text-navy-700 dark:text-white">Telefone</FormLabel>
                     <FormControl>
-                      <Input placeholder="(00) 00000-0000" {...field} />
+                      <Input className="bg-white dark:bg-[#232c43] text-navy-800 dark:text-white border border-gray-200 dark:border-[#232c43] placeholder:text-navy-400 dark:placeholder-white" placeholder="(00) 00000-0000" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -201,11 +200,11 @@ const PropertyContactForm: React.FC<PropertyContactFormProps> = ({
               name="message"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Mensagem</FormLabel>
+                  <FormLabel className="text-navy-700 dark:text-white">Mensagem</FormLabel>
                   <FormControl>
                     <Textarea 
                       placeholder="Escreva sua mensagem..." 
-                      className="min-h-[100px]" 
+                      className="min-h-[100px] bg-white dark:bg-[#232c43] text-navy-800 dark:text-white border border-gray-200 dark:border-[#232c43] placeholder:text-navy-400 dark:placeholder-white" 
                       {...field}
                     />
                   </FormControl>
@@ -214,7 +213,7 @@ const PropertyContactForm: React.FC<PropertyContactFormProps> = ({
               )}
             />
             
-            <Button type="submit" className="w-full bg-navy-700 hover:bg-navy-600">
+            <Button type="submit" className="w-full bg-navy-700 hover:bg-navy-600 text-white dark:bg-navy-700 dark:hover:bg-navy-600 dark:text-white">
               Enviar mensagem
             </Button>
           </form>
@@ -224,7 +223,7 @@ const PropertyContactForm: React.FC<PropertyContactFormProps> = ({
       <div className="mt-4 text-center">
         <SocialShare 
           title={`Imóvel: ${propertyTitle}`}
-          description={`Confira este imóvel no Achei meu Lar: ${propertyTitle}`}
+          description={`Confira este imóvel no Imóveis Conecta: ${propertyTitle}`}
           className="text-xs mx-auto"
         />
       </div>

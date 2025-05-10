@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -14,7 +13,7 @@ const PrivacyPolicy: React.FC = () => {
         
         <div className="prose max-w-none">
           <p className="lead">
-            Esta Política de Privacidade descreve como o Achei meu Lar coleta, usa e compartilha suas informações pessoais.
+            Esta Política de Privacidade descreve como o Imóveis Conecta coleta, usa e compartilha suas informações pessoais.
           </p>
           
           <h2>1. Informações Coletadas</h2>

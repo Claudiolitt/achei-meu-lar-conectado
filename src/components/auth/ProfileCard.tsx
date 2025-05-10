@@ -1,4 +1,3 @@
-
 import { useAuth } from "@/contexts/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -25,7 +24,7 @@ export default function ProfileCard() {
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="flex flex-row items-center gap-4">
         <Avatar className="h-14 w-14">
-          <AvatarImage src={user.photoUrl} alt={user.name} />
+          <AvatarImage src={user.avatar || undefined} alt={user.name} />
           <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
         </Avatar>
         <div>

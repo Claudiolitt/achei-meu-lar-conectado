@@ -1,12 +1,11 @@
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Form,
   FormControl,
@@ -24,7 +23,6 @@ const registerSchema = z.object({
   confirmPassword: z.string(),
   phone: z.string().optional(),
   cpf: z.string().optional(),
-  type: z.enum(["client", "owner"]),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "As senhas não correspondem",
   path: ["confirmPassword"],
@@ -34,6 +32,7 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function RegisterForm({ onSuccess }: { onSuccess?: () => void }) {
   const { register } = useAuth();
+  const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -47,7 +46,6 @@ export default function RegisterForm({ onSuccess }: { onSuccess?: () => void }) 
       confirmPassword: "",
       phone: "",
       cpf: "",
-      type: "client",
     },
   });
 
@@ -55,19 +53,17 @@ export default function RegisterForm({ onSuccess }: { onSuccess?: () => void }) 
     setIsSubmitting(true);
     try {
       const { confirmPassword, ...registerData } = values;
-      // Make sure to pass all required fields
       await register({
         name: registerData.name,
         email: registerData.email,
         password: registerData.password,
-        type: registerData.type,
         phone: registerData.phone,
         cpf: registerData.cpf,
       });
       if (onSuccess) onSuccess();
+      navigate('/validation'); // Redirect to validation page after successful registration
     } catch (error: any) {
       console.error("Register error:", error);
-      // Toast is already shown in the auth context
     } finally {
       setIsSubmitting(false);
     }
@@ -92,7 +88,7 @@ export default function RegisterForm({ onSuccess }: { onSuccess?: () => void }) 
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
         <FormField
           control={form.control}
           name="name"
@@ -219,41 +215,6 @@ export default function RegisterForm({ onSuccess }: { onSuccess?: () => void }) 
                     )}
                   </Button>
                 </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="type"
-          render={({ field }) => (
-            <FormItem className="space-y-3">
-              <FormLabel>Tipo de conta</FormLabel>
-              <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  className="flex flex-col space-y-1"
-                >
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="client" />
-                    </FormControl>
-                    <FormLabel className="font-normal">
-                      Cliente (busco imóveis)
-                    </FormLabel>
-                  </FormItem>
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="owner" />
-                    </FormControl>
-                    <FormLabel className="font-normal">
-                      Proprietário/Anunciante (quero anunciar imóveis)
-                    </FormLabel>
-                  </FormItem>
-                </RadioGroup>
               </FormControl>
               <FormMessage />
             </FormItem>

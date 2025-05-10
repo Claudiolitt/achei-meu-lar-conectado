@@ -3,7 +3,7 @@ import LoginForm from '@/components/auth/LoginForm';
 
 const Login = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#0e1624]">
       <div className="w-full max-w-md">
         <LoginForm />
       </div>

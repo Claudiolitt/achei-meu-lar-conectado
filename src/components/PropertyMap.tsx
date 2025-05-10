@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -154,7 +153,7 @@ const PropertyMap: React.FC<PropertyMapProps> = ({ properties }) => {
         <p className="text-navy-600 mb-6 text-center">
           Para visualizar os imóveis no mapa, por favor insira seu token público do Mapbox.
           <br />
-          Você pode obter um token gratuito em <a href="https://www.mapbox.com/" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">mapbox.com</a>
+          Você pode obter um token gratuito em <a href="https://www.mapbox.com/about/maps/" target="_blank" rel="noopener noreferrer" className="text-navy-900 underline">mapbox.com</a>
         </p>
         <form onSubmit={handleTokenSubmit} className="w-full max-w-md">
           <div className="flex gap-2">

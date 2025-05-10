@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -52,6 +51,12 @@
     --boho-300: 34 77% 72%;
     --boho-400: 22 55% 59%;
     --boho-500: 14 48% 44%;
+
+    --color-dark-bg: #0e1624;
+    --color-dark-surface: #18223a;
+    --color-dark-accent: #2d3a5a;
+    --color-dark-border: #232c43;
+    --color-dark-text: #b0b8c9;
   }
  
   .dark {
@@ -65,7 +70,7 @@
     --popover-foreground: 210 40% 98%;
  
     --primary: 211 100% 50%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
  
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
@@ -108,7 +113,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-white text-navy-800 antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
     overflow-x: hidden;
   }
@@ -125,15 +130,42 @@
 
   /* Improved heading hierarchy */
   h1 {
-    @apply text-3xl md:text-4xl font-bold;
+    @apply text-3xl md:text-4xl font-bold tracking-tight;
   }
   
   h2 {
-    @apply text-2xl md:text-3xl font-semibold;
+    @apply text-2xl md:text-3xl font-semibold tracking-tight;
   }
   
   h3 {
-    @apply text-xl md:text-2xl font-semibold;
+    @apply text-xl md:text-2xl font-semibold tracking-tight;
+  }
+
+  /* Dark mode improvements */
+  .dark {
+    color-scheme: dark;
+  }
+
+  .dark .bg-background {
+    background: linear-gradient(to bottom, hsl(var(--background)), hsl(var(--background) / 0.95));
+  }
+
+  .dark .bg-card {
+    background: linear-gradient(to bottom, hsl(var(--card)), hsl(var(--card) / 0.95));
+  }
+
+  /* Improved contrast for dark mode */
+  .dark .text-muted-foreground {
+    color: hsl(var(--muted-foreground) / 0.9);
+  }
+
+  .dark .border {
+    border-color: hsl(var(--border) / 0.5);
+  }
+
+  /* Smooth transitions */
+  .transition-theme {
+    @apply transition-colors duration-200;
   }
 }
 
@@ -162,13 +194,17 @@
   }
 
   .focus-visible-ring {
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 dark:focus-visible:ring-offset-background;
   }
 }
 
 /* Property Card Styles */
 .property-card-shadow {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.dark .property-card-shadow {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .property-card-hover {
@@ -180,11 +216,18 @@
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
 }
 
+.dark .property-card-hover:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+}
+
 /* Mapbox Custom Styles */
 .mapboxgl-popup-content {
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  @apply bg-background text-foreground p-4 rounded-lg shadow-lg;
+}
+
+.dark .mapboxgl-popup-content {
+  background-color: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
 }
 
 .property-marker {
@@ -198,16 +241,12 @@
 
 /* Animation utilities */
 @layer utilities {
-  .animate-fade-in {
-    animation: fadeIn 0.5s ease-in-out forwards;
-  }
-  
   .animate-slide-in-bottom {
-    animation: slideInBottom 0.5s ease-out forwards;
+    animation: slideInBottom 0.3s ease-out;
   }
-  
+
   .animate-slide-in-right {
-    animation: slideInRight 0.5s ease-out forwards;
+    animation: slideInRight 0.3s ease-out;
   }
 }
 
@@ -226,13 +265,25 @@
   to { transform: translateX(0); opacity: 1; }
 }
 
-/* Responsive helpers */
-@layer utilities {
-  .container-tight {
-    @apply container mx-auto px-4 max-w-5xl;
-  }
-  
-  .container-wide {
-    @apply container mx-auto px-4 max-w-7xl;
-  }
+/* Container utilities */
+.container-tight {
+  @apply max-w-3xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+.container-wide {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+/* Utility classes for dark mode */
+.dark-bg {
+  background-color: var(--color-dark-bg);
+}
+.dark-surface {
+  background-color: var(--color-dark-surface);
+}
+.dark-border {
+  border-color: var(--color-dark-border);
+}
+.dark-text {
+  color: var(--color-dark-text);
 }

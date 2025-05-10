@@ -3,7 +3,7 @@ import RegisterForm from '@/components/auth/RegisterForm';
 
 const Register = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#0e1624]">
       <div className="w-full max-w-md">
         <RegisterForm />
       </div>
