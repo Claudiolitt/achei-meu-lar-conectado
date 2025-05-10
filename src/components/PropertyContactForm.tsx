@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Phone, Mail, MessageSquare, Share2 } from 'lucide-react';
+import { Phone, Mail, MessageSquare } from 'lucide-react';
 import { useToast } from "@/components/ui/use-toast";
 import { 
   Form,
@@ -17,6 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { WhatsappLogo } from './icons/WhatsappLogo';
+import SocialShare from './SocialShare';
 
 interface PropertyContactFormProps {
   propertyId: string;
@@ -221,10 +222,11 @@ const PropertyContactForm: React.FC<PropertyContactFormProps> = ({
       </div>
       
       <div className="mt-4 text-center">
-        <Button variant="ghost" size="sm" className="text-xs flex items-center mx-auto text-muted-foreground">
-          <Share2 className="mr-1 h-3 w-3" />
-          Compartilhar este anúncio
-        </Button>
+        <SocialShare 
+          title={`Imóvel: ${propertyTitle}`}
+          description={`Confira este imóvel no Achei meu Lar: ${propertyTitle}`}
+          className="text-xs mx-auto"
+        />
       </div>
     </div>
   );

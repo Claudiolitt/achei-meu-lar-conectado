@@ -25,6 +25,7 @@ import RealEstateNews from './pages/RealEstateNews';
 import MortgageCalculator from './pages/MortgageCalculator';
 import Notifications from './pages/Notifications';
 import Chat from './pages/Chat';
+import PrivacyConsent from './components/security/PrivacyConsent';
 
 const App = () => {
   return (
@@ -66,6 +67,7 @@ const App = () => {
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Toaster richColors closeButton position="top-right" />
+          <PrivacyConsent />
         </AuthProvider>
       </Router>
     </ThemeProvider>
