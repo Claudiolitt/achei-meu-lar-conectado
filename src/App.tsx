@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import SplashScreen from './pages/SplashScreen';
@@ -26,6 +25,7 @@ import MortgageCalculator from './pages/MortgageCalculator';
 import Notifications from './pages/Notifications';
 import Chat from './pages/Chat';
 import PrivacyConsent from './components/security/PrivacyConsent';
+import Login from './pages/Login';
 
 const App = () => {
   return (
@@ -36,6 +36,7 @@ const App = () => {
             {/* Initial Flow */}
             <Route path="/splash" element={<SplashScreen />} />
             <Route path="/onboarding" element={<Onboarding />} />
+            <Route path="/login" element={<Login />} />
             
             {/* Main Routes */}
             <Route path="/" element={<Index />} />
