@@ -120,7 +120,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         throw new Error('Email já cadastrado');
       }
       
-      // Create new user
+      // Create new user - ensure all required fields are present
       const newUser: User = {
         id: `${mockUsers.length + 1}`,
         name: userData.name,

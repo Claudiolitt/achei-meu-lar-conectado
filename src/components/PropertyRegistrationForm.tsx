@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -108,9 +107,8 @@ const PropertyRegistrationForm: React.FC = () => {
       }
       
       // Simulate successful submission for free listing
-      toast({
-        title: "Imóvel cadastrado com sucesso!",
-        description: "Seu anúncio foi publicado e já está disponível para visualização.",
+      toast.success("Imóvel cadastrado com sucesso!", {
+        description: "Seu anúncio foi publicado e já está disponível para visualização."
       });
       
       // Redirect to dashboard or property listing
@@ -118,10 +116,8 @@ const PropertyRegistrationForm: React.FC = () => {
         navigate('/properties');
       }, 2000);
     } catch (error) {
-      toast({
-        title: "Erro ao cadastrar imóvel",
-        description: "Ocorreu um erro ao processar seu cadastro. Tente novamente.",
-        variant: "destructive",
+      toast.error("Erro ao cadastrar imóvel", {
+        description: "Ocorreu um erro ao processar seu cadastro. Tente novamente."
       });
       console.error('Error submitting form:', error);
     }
@@ -131,10 +127,8 @@ const PropertyRegistrationForm: React.FC = () => {
     if (e.target.files && e.target.files.length > 0) {
       // Check if number of images is within limits
       if (e.target.files.length > 10) {
-        toast({
-          title: "Limite de imagens excedido",
-          description: "Você pode enviar no máximo 10 imagens por anúncio.",
-          variant: "destructive",
+        toast.error("Limite de imagens excedido", {
+          description: "Você pode enviar no máximo 10 imagens por anúncio."
         });
         return;
       }
@@ -143,10 +137,8 @@ const PropertyRegistrationForm: React.FC = () => {
       const MAX_SIZE = 5 * 1024 * 1024; // 5MB
       for (let i = 0; i < e.target.files.length; i++) {
         if (e.target.files[i].size > MAX_SIZE) {
-          toast({
-            title: "Tamanho de imagem excedido",
-            description: `A imagem "${e.target.files[i].name}" excede o limite de 5MB.`,
-            variant: "destructive",
+          toast.error("Tamanho de imagem excedido", {
+            description: `A imagem "${e.target.files[i].name}" excede o limite de 5MB.`
           });
           return;
         }
@@ -161,10 +153,8 @@ const PropertyRegistrationForm: React.FC = () => {
       // Check if image size is within limits (5MB)
       const MAX_SIZE = 5 * 1024 * 1024; // 5MB
       if (e.target.files[0].size > MAX_SIZE) {
-        toast({
-          title: "Tamanho de imagem excedido",
-          description: "A planta baixa excede o limite de 5MB.",
-          variant: "destructive",
+        toast.error("Tamanho de imagem excedido", {
+          description: "A planta baixa excede o limite de 5MB."
         });
         return;
       }
@@ -549,7 +539,7 @@ const PropertyRegistrationForm: React.FC = () => {
                   required
                 />
                 <label htmlFor="terms" className="text-sm">
-                  Declaro que as informações fornecidas são verdadeiras e estou ciente dos <a href="#" className="text-primary hover:underline">termos e condições</a> da plataforma.
+                  Declaro que as informações fornecidas são verdadeiras e estou ciente dos <a href="#" className="text-primary hover:underline">termos e condi��ões</a> da plataforma.
                 </label>
               </div>
             </div>

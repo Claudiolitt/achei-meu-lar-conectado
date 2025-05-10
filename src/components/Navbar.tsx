@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { useAuth } from '@/contexts/AuthContext';
+import { Separator } from "@/components/ui/separator";
 import { 
   Home, 
   Search, 

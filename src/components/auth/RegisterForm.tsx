@@ -55,7 +55,15 @@ export default function RegisterForm({ onSuccess }: { onSuccess?: () => void }) 
     setIsSubmitting(true);
     try {
       const { confirmPassword, ...registerData } = values;
-      await register(registerData);
+      // Make sure to pass all required fields
+      await register({
+        name: registerData.name,
+        email: registerData.email,
+        password: registerData.password,
+        type: registerData.type,
+        phone: registerData.phone,
+        cpf: registerData.cpf,
+      });
       if (onSuccess) onSuccess();
     } catch (error: any) {
       console.error("Register error:", error);
