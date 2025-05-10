@@ -38,7 +38,7 @@ export interface RegisterData {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Mock users for demonstration
-const mockUsers = [
+const mockUsers: Array<User & { password: string }> = [
   {
     id: '1',
     name: 'João Silva',
@@ -46,7 +46,7 @@ const mockUsers = [
     password: 'senha123',
     phone: '(11) 98765-4321',
     cpf: '123.456.789-00',
-    type: 'client' as const,
+    type: 'client',
     photoUrl: 'https://randomuser.me/api/portraits/men/32.jpg',
     verified: true
   },
@@ -57,7 +57,7 @@ const mockUsers = [
     password: 'senha123',
     phone: '(11) 91234-5678',
     cpf: '987.654.321-00',
-    type: 'owner' as const,
+    type: 'owner',
     photoUrl: 'https://randomuser.me/api/portraits/women/44.jpg',
     verified: true
   }
