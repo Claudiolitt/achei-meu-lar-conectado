@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import SplashScreen from './pages/SplashScreen';
 import Onboarding from './pages/Onboarding';
 import Index from './pages/Index';
@@ -37,6 +37,7 @@ const App = () => {
             <Route path="/splash" element={<SplashScreen />} />
             <Route path="/onboarding" element={<Onboarding />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Navigate to="/login" replace />} />
             
             {/* Main Routes */}
             <Route path="/" element={<Index />} />
