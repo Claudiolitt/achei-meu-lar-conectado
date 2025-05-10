@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useAuth } from '@/contexts/AuthContext';
 import { Separator } from "@/components/ui/separator";
+import { ThemeToggle } from './theme/ThemeToggle';
 import { 
   Home, 
   Search, 
@@ -34,11 +35,13 @@ import {
   FileText
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { user, isAuthenticated, logout } = useAuth();
+  const isMobile = useIsMobile();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -52,25 +55,26 @@ const Navbar = () => {
   const notificationCount = 2;
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60" role="banner">
+      <a href="#main-content" className="skip-link">Pular para o conteúdo principal</a>
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-8">
           <Link to="/" className="flex items-center gap-2">
             <Home className="h-6 w-6 text-primary" />
             <span className="text-xl font-bold">ImóveisApp</span>
           </Link>
-          <nav className="hidden md:flex gap-6">
-            <Link to="/properties" className="text-sm font-medium transition-colors hover:text-primary">
+          <nav className="hidden md:flex gap-6" aria-label="Navegação Principal">
+            <Link to="/properties" className="text-sm font-medium transition-colors hover:text-primary focus-visible:text-primary focus-visible:outline-none focus-visible:underline">
               Comprar
             </Link>
-            <Link to="/properties" className="text-sm font-medium transition-colors hover:text-primary">
+            <Link to="/properties" className="text-sm font-medium transition-colors hover:text-primary focus-visible:text-primary focus-visible:outline-none focus-visible:underline">
               Alugar
             </Link>
-            <Link to="/properties" className="text-sm font-medium transition-colors hover:text-primary">
+            <Link to="/properties" className="text-sm font-medium transition-colors hover:text-primary focus-visible:text-primary focus-visible:outline-none focus-visible:underline">
               Lançamentos
             </Link>
             <DropdownMenu>
-              <DropdownMenuTrigger className="text-sm font-medium transition-colors hover:text-primary">
+              <DropdownMenuTrigger className="text-sm font-medium transition-colors hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
                 Ferramentas
               </DropdownMenuTrigger>
               <DropdownMenuContent>
@@ -91,25 +95,27 @@ const Navbar = () => {
           </nav>
         </div>
         
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={toggleSearch}>
+        <div className="flex items-center gap-2 md:gap-4">
+          <ThemeToggle />
+          
+          <Button variant="ghost" size="icon" onClick={toggleSearch} aria-label="Buscar">
             <Search className="h-5 w-5" />
           </Button>
           
           {isAuthenticated && (
             <>
               <Link to="/notifications">
-                <Button variant="ghost" size="icon" className="relative">
+                <Button variant="ghost" size="icon" className="relative" aria-label={`Notificações (${notificationCount} não lidas)`}>
                   <Bell className="h-5 w-5" />
                   {notificationCount > 0 && (
                     <Badge variant="destructive" className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0">
-                      {notificationCount}
+                      <span aria-hidden="true">{notificationCount}</span>
                     </Badge>
                   )}
                 </Button>
               </Link>
               <Link to="/chat">
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" size="icon" aria-label="Mensagens">
                   <MessageCircle className="h-5 w-5" />
                 </Button>
               </Link>
@@ -196,6 +202,11 @@ const Navbar = () => {
                   <Link to="/notifications">
                     <Bell className="mr-2 h-4 w-4" />
                     <span>Notificações</span>
+                    {notificationCount > 0 && (
+                      <Badge variant="destructive" className="ml-auto">
+                        {notificationCount}
+                      </Badge>
+                    )}
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
@@ -236,7 +247,14 @@ const Navbar = () => {
             </div>
           )}
           
-          <Button variant="ghost" size="icon" className="md:hidden" onClick={toggleMenu}>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="md:hidden"
+            onClick={toggleMenu}
+            aria-expanded={isMenuOpen}
+            aria-label="Menu"
+          >
             {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
         </div>
@@ -244,7 +262,7 @@ const Navbar = () => {
       
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="md:hidden border-t p-4">
+        <div className="md:hidden border-t p-4" role="region" aria-label="Menu móvel">
           <nav className="flex flex-col space-y-4">
             <Link to="/properties" className="text-sm font-medium" onClick={toggleMenu}>
               Comprar
@@ -295,16 +313,17 @@ const Navbar = () => {
       
       {/* Search overlay */}
       {isSearchOpen && (
-        <div className="absolute inset-x-0 top-16 bg-background border-b p-4 shadow-lg">
+        <div className="absolute inset-x-0 top-16 bg-background border-b p-4 shadow-lg" role="search">
           <div className="container mx-auto flex items-center gap-2">
             <Input 
               type="search" 
               placeholder="Buscar por localização, tipo de imóvel..." 
               className="flex-1"
+              aria-label="Buscar imóveis"
               autoFocus
             />
             <Button>Buscar</Button>
-            <Button variant="ghost" size="icon" onClick={toggleSearch}>
+            <Button variant="ghost" size="icon" onClick={toggleSearch} aria-label="Fechar busca">
               <X className="h-5 w-5" />
             </Button>
           </div>

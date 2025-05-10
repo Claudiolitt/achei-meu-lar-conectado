@@ -12,6 +12,7 @@ import ProfileEdit from './pages/ProfileEdit';
 import Favorites from './pages/Favorites';
 import NotFound from './pages/NotFound';
 import { AuthProvider } from './providers/AuthProvider';
+import { ThemeProvider } from './providers/ThemeProvider';
 import { Toaster } from '@/components/ui/sonner';
 import Subscriptions from './pages/Subscriptions';
 import Payment from './pages/Payment';
@@ -27,45 +28,47 @@ import Chat from './pages/Chat';
 
 const App = () => {
   return (
-    <Router>
-      <AuthProvider>
-        <Routes>
-          {/* Initial Flow */}
-          <Route path="/splash" element={<SplashScreen />} />
-          <Route path="/onboarding" element={<Onboarding />} />
-          
-          {/* Main Routes */}
-          <Route path="/" element={<Index />} />
-          <Route path="/properties" element={<Properties />} />
-          <Route path="/property/:id" element={<PropertyDetails />} />
-          <Route path="/property-registration" element={<PropertyRegistration />} />
-          
-          {/* User Account */}
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/profile/edit" element={<ProfileEdit />} />
-          <Route path="/favorites" element={<Favorites />} />
-          <Route path="/notifications" element={<Notifications />} />
-          <Route path="/chat" element={<Chat />} />
-          
-          {/* Monetization */}
-          <Route path="/subscriptions" element={<Subscriptions />} />
-          <Route path="/payment/:planId" element={<Payment />} />
-          <Route path="/payment-success" element={<PaymentSuccess />} />
-          <Route path="/partnerships" element={<Partnerships />} />
-          <Route path="/listing-highlight" element={<ListingHighlight />} />
-          
-          {/* Information Pages */}
-          <Route path="/terms" element={<TermsOfService />} />
-          <Route path="/privacy" element={<PrivacyPolicy />} />
-          <Route path="/news" element={<RealEstateNews />} />
-          <Route path="/mortgage-calculator" element={<MortgageCalculator />} />
-          
-          {/* 404 */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-        <Toaster />
-      </AuthProvider>
-    </Router>
+    <ThemeProvider defaultTheme="light">
+      <Router>
+        <AuthProvider>
+          <Routes>
+            {/* Initial Flow */}
+            <Route path="/splash" element={<SplashScreen />} />
+            <Route path="/onboarding" element={<Onboarding />} />
+            
+            {/* Main Routes */}
+            <Route path="/" element={<Index />} />
+            <Route path="/properties" element={<Properties />} />
+            <Route path="/property/:id" element={<PropertyDetails />} />
+            <Route path="/property-registration" element={<PropertyRegistration />} />
+            
+            {/* User Account */}
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/edit" element={<ProfileEdit />} />
+            <Route path="/favorites" element={<Favorites />} />
+            <Route path="/notifications" element={<Notifications />} />
+            <Route path="/chat" element={<Chat />} />
+            
+            {/* Monetization */}
+            <Route path="/subscriptions" element={<Subscriptions />} />
+            <Route path="/payment/:planId" element={<Payment />} />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
+            <Route path="/partnerships" element={<Partnerships />} />
+            <Route path="/listing-highlight" element={<ListingHighlight />} />
+            
+            {/* Information Pages */}
+            <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/news" element={<RealEstateNews />} />
+            <Route path="/mortgage-calculator" element={<MortgageCalculator />} />
+            
+            {/* 404 */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <Toaster richColors closeButton position="top-right" />
+        </AuthProvider>
+      </Router>
+    </ThemeProvider>
   );
 }
 

@@ -7,14 +7,14 @@
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
-
+    
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
  
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
  
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 211 100% 36%;
     --primary-foreground: 210 40% 98%;
  
     --secondary: 210 40% 96.1%;
@@ -34,6 +34,24 @@
     --ring: 222.2 84% 4.9%;
  
     --radius: 0.5rem;
+
+    --navy-50: 214 33% 97%;
+    --navy-100: 214 33% 93%;
+    --navy-200: 214 33% 84%;
+    --navy-300: 214 33% 69%;
+    --navy-400: 214 33% 55%;
+    --navy-500: 211 100% 36%;
+    --navy-600: 214 33% 35%;
+    --navy-700: 214 33% 28%;
+    --navy-800: 214 33% 21%;
+    --navy-900: 214 33% 14%;
+    --navy-950: 214 33% 7%;
+
+    --boho-100: 39 100% 95%;
+    --boho-200: 39 100% 90%;
+    --boho-300: 34 77% 72%;
+    --boho-400: 22 55% 59%;
+    --boho-500: 14 48% 44%;
   }
  
   .dark {
@@ -46,7 +64,7 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
  
-    --primary: 210 40% 98%;
+    --primary: 211 100% 50%;
     --primary-foreground: 222.2 47.4% 11.2%;
  
     --secondary: 217.2 32.6% 17.5%;
@@ -64,6 +82,24 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+
+    --navy-50: 214 33% 14%;
+    --navy-100: 214 33% 21%;
+    --navy-200: 214 33% 28%;
+    --navy-300: 214 33% 35%;
+    --navy-400: 214 33% 45%;
+    --navy-500: 211 100% 50%;
+    --navy-600: 214 33% 65%;
+    --navy-700: 214 33% 75%;
+    --navy-800: 214 33% 85%;
+    --navy-900: 214 33% 93%;
+    --navy-950: 214 33% 97%;
+
+    --boho-100: 14 48% 24%;
+    --boho-200: 22 55% 39%;
+    --boho-300: 34 77% 52%;
+    --boho-400: 39 100% 70%;
+    --boho-500: 39 100% 85%;
   }
 }
  
@@ -73,6 +109,60 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    overflow-x: hidden;
+  }
+
+  /* Focus indicators for accessibility */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-primary;
+  }
+
+  /* Better text readability */
+  p, li {
+    @apply leading-relaxed;
+  }
+
+  /* Improved heading hierarchy */
+  h1 {
+    @apply text-3xl md:text-4xl font-bold;
+  }
+  
+  h2 {
+    @apply text-2xl md:text-3xl font-semibold;
+  }
+  
+  h3 {
+    @apply text-xl md:text-2xl font-semibold;
+  }
+}
+
+/* Accessibility */
+@layer utilities {
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  .skip-link {
+    @apply absolute left-0 top-0 z-50 bg-background p-2 text-sm text-primary;
+    transform: translateY(-100%);
+    transition: transform 0.3s;
+  }
+  
+  .skip-link:focus {
+    transform: translateY(0%);
+  }
+
+  .focus-visible-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
   }
 }
 
@@ -106,3 +196,43 @@
   transform: scale(1.1);
 }
 
+/* Animation utilities */
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out forwards;
+  }
+  
+  .animate-slide-in-bottom {
+    animation: slideInBottom 0.5s ease-out forwards;
+  }
+  
+  .animate-slide-in-right {
+    animation: slideInRight 0.5s ease-out forwards;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInBottom {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* Responsive helpers */
+@layer utilities {
+  .container-tight {
+    @apply container mx-auto px-4 max-w-5xl;
+  }
+  
+  .container-wide {
+    @apply container mx-auto px-4 max-w-7xl;
+  }
+}
