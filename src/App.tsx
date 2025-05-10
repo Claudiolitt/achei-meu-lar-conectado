@@ -11,7 +11,7 @@ import Profile from './pages/Profile';
 import ProfileEdit from './pages/ProfileEdit';
 import Favorites from './pages/Favorites';
 import NotFound from './pages/NotFound';
-import { AuthProvider } from './contexts/AuthContext';
+import { AuthProvider } from './providers/AuthProvider';
 import { Toaster } from '@/components/ui/sonner';
 import Subscriptions from './pages/Subscriptions';
 import Payment from './pages/Payment';
