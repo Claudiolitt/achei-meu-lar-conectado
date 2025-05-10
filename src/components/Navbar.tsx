@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -25,8 +26,13 @@ import {
   ListFilter, 
   Store,
   CreditCard,
-  Users
+  Users,
+  MessageCircle,
+  Bell,
+  Calculator,
+  FileText
 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -40,6 +46,9 @@ const Navbar = () => {
   const toggleSearch = () => {
     setIsSearchOpen(!isSearchOpen);
   };
+
+  // Mock notification count - in a real app this would come from a backend
+  const notificationCount = 2;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -59,9 +68,25 @@ const Navbar = () => {
             <Link to="/properties" className="text-sm font-medium transition-colors hover:text-primary">
               Lançamentos
             </Link>
-            <Link to="/properties" className="text-sm font-medium transition-colors hover:text-primary">
-              Bairros
-            </Link>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="text-sm font-medium transition-colors hover:text-primary">
+                Ferramentas
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem asChild>
+                  <Link to="/mortgage-calculator" className="flex items-center">
+                    <Calculator className="mr-2 h-4 w-4" />
+                    <span>Calculadora de Financiamento</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/news" className="flex items-center">
+                    <Search className="mr-2 h-4 w-4" />
+                    <span>Notícias do Mercado</span>
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </nav>
         </div>
         
@@ -69,6 +94,26 @@ const Navbar = () => {
           <Button variant="ghost" size="icon" onClick={toggleSearch}>
             <Search className="h-5 w-5" />
           </Button>
+          
+          {isAuthenticated && (
+            <>
+              <Link to="/notifications">
+                <Button variant="ghost" size="icon" className="relative">
+                  <Bell className="h-5 w-5" />
+                  {notificationCount > 0 && (
+                    <Badge variant="destructive" className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0">
+                      {notificationCount}
+                    </Badge>
+                  )}
+                </Button>
+              </Link>
+              <Link to="/chat">
+                <Button variant="ghost" size="icon">
+                  <MessageCircle className="h-5 w-5" />
+                </Button>
+              </Link>
+            </>
+          )}
           
           {isAuthenticated && user?.type === 'owner' && (
             <DropdownMenu>
@@ -99,6 +144,12 @@ const Navbar = () => {
                   <Link to="/subscriptions">
                     <CreditCard className="mr-2 h-4 w-4" />
                     <span>Planos de anunciante</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/listing-highlight">
+                    <Building className="mr-2 h-4 w-4" />
+                    <span>Destaque de anúncios</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
@@ -141,9 +192,29 @@ const Navbar = () => {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
+                  <Link to="/notifications">
+                    <Bell className="mr-2 h-4 w-4" />
+                    <span>Notificações</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
                   <Link to="/profile/edit">
                     <Settings className="mr-2 h-4 w-4" />
                     <span>Configurações</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuLabel>Informações</DropdownMenuLabel>
+                <DropdownMenuItem asChild>
+                  <Link to="/terms">
+                    <FileText className="mr-2 h-4 w-4" />
+                    <span>Termos de Uso</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/privacy">
+                    <FileText className="mr-2 h-4 w-4" />
+                    <span>Política de Privacidade</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
@@ -183,12 +254,32 @@ const Navbar = () => {
             <Link to="/properties" className="text-sm font-medium" onClick={toggleMenu}>
               Lançamentos
             </Link>
-            <Link to="/properties" className="text-sm font-medium" onClick={toggleMenu}>
-              Bairros
+            <Link to="/mortgage-calculator" className="text-sm font-medium" onClick={toggleMenu}>
+              Calculadora de Financiamento
             </Link>
+            <Link to="/news" className="text-sm font-medium" onClick={toggleMenu}>
+              Notícias do Mercado
+            </Link>
+            {isAuthenticated && (
+              <>
+                <Separator />
+                <Link to="/profile" className="text-sm font-medium" onClick={toggleMenu}>
+                  Meu Perfil
+                </Link>
+                <Link to="/favorites" className="text-sm font-medium" onClick={toggleMenu}>
+                  Favoritos
+                </Link>
+                <Link to="/notifications" className="text-sm font-medium" onClick={toggleMenu}>
+                  Notificações
+                </Link>
+                <Link to="/chat" className="text-sm font-medium" onClick={toggleMenu}>
+                  Chat
+                </Link>
+              </>
+            )}
             {!isAuthenticated && (
               <>
-                <hr className="my-2" />
+                <Separator />
                 <Link to="/login" className="text-sm font-medium" onClick={toggleMenu}>
                   Entrar
                 </Link>

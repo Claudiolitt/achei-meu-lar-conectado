@@ -26,7 +26,7 @@ interface AuthContextType {
   setUserType: (type: 'client' | 'owner') => Promise<void>;
 }
 
-interface RegisterData {
+export interface RegisterData {
   name: string;
   email: string;
   password: string;
