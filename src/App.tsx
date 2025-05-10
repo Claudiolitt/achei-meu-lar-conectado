@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import SplashScreen from './pages/SplashScreen';
 import Onboarding from './pages/Onboarding';
 import Index from './pages/Index';
@@ -26,6 +26,7 @@ import Notifications from './pages/Notifications';
 import Chat from './pages/Chat';
 import PrivacyConsent from './components/security/PrivacyConsent';
 import Login from './pages/Login';
+import Register from './pages/Register';
 
 const App = () => {
   return (
@@ -37,7 +38,7 @@ const App = () => {
             <Route path="/splash" element={<SplashScreen />} />
             <Route path="/onboarding" element={<Onboarding />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Navigate to="/login" replace />} />
+            <Route path="/register" element={<Register />} />
             
             {/* Main Routes */}
             <Route path="/" element={<Index />} />
