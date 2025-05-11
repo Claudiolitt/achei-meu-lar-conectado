@@ -3,10 +3,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 interface PropertyAgeProps {
-  minAge: string;
-  maxAge: string;
-  onMinAgeChange: (value: string) => void;
-  onMaxAgeChange: (value: string) => void;
+  minAge: number;
+  maxAge: number;
+  onMinAgeChange: (value: number) => void;
+  onMaxAgeChange: (value: number) => void;
 }
 
 export const PropertyAge: React.FC<PropertyAgeProps> = ({
@@ -21,7 +21,7 @@ export const PropertyAge: React.FC<PropertyAgeProps> = ({
       <div className="flex gap-2">
         <Input
           value={minAge}
-          onChange={(e) => onMinAgeChange(e.target.value)}
+          onChange={(e) => onMinAgeChange(Number(e.target.value))}
           placeholder="Mínimo (anos)"
           className="dark:bg-[#232c43] dark:text-white"
           type="number"
@@ -29,7 +29,7 @@ export const PropertyAge: React.FC<PropertyAgeProps> = ({
         />
         <Input
           value={maxAge}
-          onChange={(e) => onMaxAgeChange(e.target.value)}
+          onChange={(e) => onMaxAgeChange(Number(e.target.value))}
           placeholder="Máximo (anos)"
           className="dark:bg-[#232c43] dark:text-white"
           type="number"

@@ -3,10 +3,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 interface PriceFiltersProps {
-  minPrice: string;
-  maxPrice: string;
-  onMinPriceChange: (value: string) => void;
-  onMaxPriceChange: (value: string) => void;
+  minPrice: number;
+  maxPrice: number;
+  onMinPriceChange: (value: number) => void;
+  onMaxPriceChange: (value: number) => void;
 }
 
 export const PriceFilters: React.FC<PriceFiltersProps> = ({
@@ -22,7 +22,7 @@ export const PriceFilters: React.FC<PriceFiltersProps> = ({
         <div className="flex gap-2">
           <Input
             value={minPrice}
-            onChange={(e) => onMinPriceChange(e.target.value)}
+            onChange={(e) => onMinPriceChange(Number(e.target.value))}
             placeholder="Mínimo"
             className="dark:bg-[#232c43] dark:text-white"
             type="number"
@@ -30,7 +30,7 @@ export const PriceFilters: React.FC<PriceFiltersProps> = ({
           />
           <Input
             value={maxPrice}
-            onChange={(e) => onMaxPriceChange(e.target.value)}
+            onChange={(e) => onMaxPriceChange(Number(e.target.value))}
             placeholder="Máximo"
             className="dark:bg-[#232c43] dark:text-white"
             type="number"
