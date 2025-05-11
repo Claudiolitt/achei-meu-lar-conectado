@@ -23,10 +23,10 @@ export const PropertyTypeSelector: React.FC<PropertyTypeSelectorProps> = ({
     { id: 'sobrado', label: 'Sobrado' },
     { id: 'terreno', label: 'Terreno' },
     { id: 'chacara', label: 'Chácara' },
-    { id: 'sala-comercial', label: 'Sala Comercial' },
   ];
 
   const commercialOptions = [
+    { id: 'sala-comercial', label: 'Sala Comercial' },
     { id: 'loja', label: 'Loja' },
     { id: 'galpao', label: 'Galpão' },
     { id: 'deposito', label: 'Depósito' },
