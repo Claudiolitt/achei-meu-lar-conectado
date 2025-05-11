@@ -58,22 +58,7 @@ const Hero: React.FC = () => {
               {slides[currentSlide].description}
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4">
-              <Button 
-                className="w-full sm:w-auto flex items-center justify-center gap-2 bg-navy-700 text-white border-navy-700 hover:bg-white hover:text-black dark:bg-black dark:text-white dark:border-black dark:hover:bg-white dark:hover:text-black animate-slide-in-bottom"
-                size={isMobile ? "default" : "lg"}
-                style={{ animationDelay: "0.1s" }}
-              >
-                <Home className="h-5 w-5" />
-                <span>Comprar</span>
-              </Button>
-              <Button 
-                className="w-full sm:w-auto flex items-center justify-center gap-2 bg-navy-700 text-white border-navy-700 hover:bg-white hover:text-black dark:bg-black dark:text-white dark:border-black dark:hover:bg-white dark:hover:text-black animate-slide-in-bottom"
-                size={isMobile ? "default" : "lg"}
-                style={{ animationDelay: "0.2s" }}
-              >
-                <Building className="h-5 w-5" />
-                <span>Alugar</span>
-              </Button>
+              {/* Buttons removed */}
             </div>
           </div>
         </div>

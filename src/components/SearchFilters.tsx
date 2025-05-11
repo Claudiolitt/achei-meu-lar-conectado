@@ -1,39 +1,37 @@
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent } from '@/components/ui/card';
-import { Filter, Home, MapPin, Search } from 'lucide-react';
-import { PropertyType } from '../types/property';
-import AutocompleteSearch from './AutocompleteSearch';
-import { useNavigate } from 'react-router-dom';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  Input,
+  Label,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui";
+
+import { useNavigate } from "react-router-dom";
+import { PropertyType } from "@/types/property";
+import { PriceFilters } from "@/components/search-filters/PriceFilters";
+import { PropertyFeatures } from "@/components/search-filters/PropertyFeatures";
+import { PropertyAge } from "@/components/search-filters/PropertyAge";
+import { SizeFilters } from "@/components/search-filters/SizeFilters";
 
 const SearchFilters: React.FC = () => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [priceRange, setPriceRange] = useState([0, 1000000]);
-  const [areaRange, setAreaRange] = useState([0, 500]);
-  const [selectedTypes, setSelectedTypes] = useState<PropertyType[]>([]);
-  const [propertyType, setPropertyType] = useState<string>('all');
-  const [transactionType, setTransactionType] = useState<string>('buy');
-  const [contractDuration, setContractDuration] = useState<string>('');
-  const [customDuration, setCustomDuration] = useState<string>('');
-  const [condoRange, setCondoRange] = useState<[number, number]>([0, 2000]);
-  const [iptuRange, setIptuRange] = useState<[number, number]>([0, 2000]);
-  const [bedrooms, setBedrooms] = useState<number>(0);
-  const [bathrooms, setBathrooms] = useState<number>(0);
-  const [parkingSpots, setParkingSpots] = useState<number>(0);
-  const [totalPriceRange, setTotalPriceRange] = useState<[number, number]>([0, 3000000]);
   const [minPrice, setMinPrice] = useState<string>('');
   const [maxPrice, setMaxPrice] = useState<string>('');
-  const [keywords, setKeywords] = useState<string>('');
   const [landSize, setLandSize] = useState<[number, number]>([0, 1000]);
   const [buildingSize, setBuildingSize] = useState<[number, number]>([0, 1000]);
-  const [yearBuilt, setYearBuilt] = useState<string>('any');
+  const [minAge, setMinAge] = useState<string>('');
+  const [maxAge, setMaxAge] = useState<string>('');
   const [features, setFeatures] = useState<{[key: string]: boolean}>({
     pool: false,
     balcony: false,
@@ -56,7 +54,8 @@ const SearchFilters: React.FC = () => {
     noSteps: false,
     wideDoors: false,
     elevator: false,
-    established: false,
+    old: false,
+    veryOld: false,
     suite: false,
     dishwasher: false,
     builtIn: false,
@@ -65,68 +64,39 @@ const SearchFilters: React.FC = () => {
   const navigate = useNavigate();
   const [location, setLocation] = useState('');
   const [activeTab, setActiveTab] = useState('comprar');
-  const [showFilters, setShowFilters] = useState(false);
-  const [propertyTypes, setPropertyTypes] = useState<string[]>([]);
-  const [saleMethod, setSaleMethod] = useState<string>('all');
-  const [excludeUnderContract, setExcludeUnderContract] = useState(false);
-  const [showPriceOnly, setShowPriceOnly] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [minCondo, setMinCondo] = useState('');
-  const [maxCondo, setMaxCondo] = useState('');
-  const [minIptu, setMinIptu] = useState('');
-  const [maxIptu, setMaxIptu] = useState('');
-  const [useTotalPrice, setUseTotalPrice] = useState(false);
-  const [minContractDuration, setMinContractDuration] = useState('');
-  const [maxContractDuration, setMaxContractDuration] = useState('');
 
-  const togglePropertyType = (type: PropertyType) => {
-    if (selectedTypes.includes(type)) {
-      setSelectedTypes(selectedTypes.filter(t => t !== type));
-    } else {
-      setSelectedTypes([...selectedTypes, type]);
-    }
-  };
-
-  const handleSearch = (query: string) => {
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
     const params = new URLSearchParams();
-    params.append('q', query);
+    
     if (minPrice) params.append('minPrice', minPrice);
     if (maxPrice) params.append('maxPrice', maxPrice);
-    if (bedrooms > 0) params.append('bedrooms', bedrooms.toString());
-    if (bathrooms > 0) params.append('bathrooms', bathrooms.toString());
-    if (parkingSpots > 0) params.append('parkingSpots', parkingSpots.toString());
-    if (propertyTypes.length > 0) params.append('propertyTypes', propertyTypes.join(','));
-    Object.entries(features).forEach(([key, value]) => {
-      if (value) params.append(`feature_${key}`, 'true');
-    });
-    if (keywords) params.append('keywords', keywords);
-    if (showPriceOnly) params.append('showPriceOnly', 'true');
-    if (excludeUnderContract) params.append('excludeUnderContract', 'true');
-    if (!useTotalPrice) {
-      if (minCondo) params.append('minCondo', minCondo);
-      if (maxCondo) params.append('maxCondo', maxCondo);
-      if (minIptu) params.append('minIptu', minIptu);
-      if (maxIptu) params.append('maxIptu', maxIptu);
+    if (minAge) params.append('minAge', minAge);
+    if (maxAge) params.append('maxAge', maxAge);
+    if (landSize[0] > 0) params.append('minLandSize', landSize[0].toString());
+    if (landSize[1] < 1000) params.append('maxLandSize', landSize[1].toString());
+    if (buildingSize[0] > 0) params.append('minBuildingSize', buildingSize[0].toString());
+    if (buildingSize[1] < 1000) params.append('maxBuildingSize', buildingSize[1].toString());
+    
+    const activeFeatures = Object.entries(features)
+      .filter(([_, value]) => value)
+      .map(([key]) => key);
+    
+    if (activeFeatures.length > 0) {
+      params.append('features', activeFeatures.join(','));
     }
-    if (useTotalPrice) params.append('useTotalPrice', 'true');
-    if (minContractDuration) params.append('minContractDuration', minContractDuration);
-    if (maxContractDuration) params.append('maxContractDuration', maxContractDuration);
-    navigate(`/search?${params.toString()}`);
-    setIsOpen(false);
-  };
-
-  const handleApplyFilters = () => {
-    handleSearch(location);
+    
+    navigate(`/properties?${params.toString()}`);
   };
 
   const handleClearFilters = () => {
-    setLocation('');
     setMinPrice('');
     setMaxPrice('');
-    setBedrooms(0);
-    setBathrooms(0);
-    setParkingSpots(0);
-    setPropertyTypes([]);
+    setMinAge('');
+    setMaxAge('');
+    setLandSize([0, 1000]);
+    setBuildingSize([0, 1000]);
     setFeatures({
       pool: false,
       balcony: false,
@@ -149,325 +119,284 @@ const SearchFilters: React.FC = () => {
       noSteps: false,
       wideDoors: false,
       elevator: false,
-      established: false,
+      old: false,
+      veryOld: false,
       suite: false,
       dishwasher: false,
       builtIn: false,
       security: false,
     });
-    setKeywords('');
-    setShowPriceOnly(false);
-    setExcludeUnderContract(false);
-    setMinCondo('');
-    setMaxCondo('');
-    setMinIptu('');
-    setMaxIptu('');
-    setUseTotalPrice(false);
-    setMinContractDuration('');
-    setMaxContractDuration('');
   };
 
   return (
-    <div className="bg-white dark:bg-[#18223a] rounded-xl shadow-md p-4 border border-navy-100 dark:border-[#18223a] flex flex-col gap-2">
-      <div className="flex gap-6 border-b border-gray-200 dark:border-navy-700 pb-2">
-        {['comprar', 'alugar'].map(tab => (
-          <button
-            key={tab}
-            className={`text-base font-semibold pb-2 border-b-2 transition-colors ${activeTab === tab ? 'border-primary text-primary dark:text-primary' : 'border-transparent text-navy-700 dark:text-white'}`}
-            onClick={() => setActiveTab(tab)}
-          >
-            {tab.charAt(0).toUpperCase() + tab.slice(1)}
-          </button>
-        ))}
-      </div>
-      
-      <div className="flex gap-4 items-center">
-        <div className="flex-1">
-          <Input
-            value={location}
-            onChange={e => setLocation(e.target.value)}
-            placeholder="Digite o endereço, bairro ou cidade..."
-            className="dark:bg-[#232c43] dark:text-white"
-          />
-        </div>
-        <Button
-          onClick={() => setIsOpen(true)}
-          variant="outline"
-          className="border-navy-600 text-navy-600 hover:bg-navy-50 dark:border-navy-400 dark:text-navy-400 dark:hover:bg-navy-900"
-        >
+    <div className="flex flex-col gap-4">
+      <Tabs defaultValue="comprar" value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="comprar">Comprar</TabsTrigger>
+          <TabsTrigger value="alugar">Alugar</TabsTrigger>
+        </TabsList>
+      </Tabs>
+
+      <div className="flex items-center gap-4">
+        <Input
+          placeholder="Localização"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          className="flex-1"
+        />
+        <Button onClick={() => setIsOpen(true)}>
           Filtros
-        </Button>
-        <Button
-          onClick={() => handleSearch(location)}
-          className="bg-navy-600 hover:bg-navy-700 text-white"
-        >
-          Aplicar Filtros
         </Button>
       </div>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Filtros de Busca</DialogTitle>
-          </DialogHeader>
-
-          <Tabs defaultValue="comprar" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="comprar">Comprar</TabsTrigger>
-              <TabsTrigger value="alugar">Alugar</TabsTrigger>
+        <DialogContent>
+          <Tabs defaultValue="preco">
+            <TabsList>
+              <TabsTrigger value="preco">Preço</TabsTrigger>
+              <TabsTrigger value="caracteristicas">Características</TabsTrigger>
+              <TabsTrigger value="idade">Idade</TabsTrigger>
+              <TabsTrigger value="tamanho">Tamanho</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="comprar" className="space-y-6">
-              {/* Tipo de Imóvel */}
-              <div>
-                <h4 className="font-semibold mb-2 text-navy-900 dark:text-white">Tipo de imóvel</h4>
-                <div className="grid grid-cols-2 gap-2">
-                  {['todos', 'casa', 'apartamento', 'terreno', 'comercial', 'vila', 'rural', 'condomínio', 'outros'].map(type => (
-                    <label key={type} className="flex items-center gap-2">
-                      <Checkbox
-                        checked={propertyTypes.includes(type)}
-                        onCheckedChange={(checked) => {
-                          if (checked) setPropertyTypes([...propertyTypes, type]);
-                          else setPropertyTypes(propertyTypes.filter(t => t !== type));
-                        }}
-                      />
-                      <span className="text-navy-700 dark:text-white">{type.charAt(0).toUpperCase() + type.slice(1)}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
+            <TabsContent value="preco">
+              <PriceFilters
+                minPrice={minPrice}
+                maxPrice={maxPrice}
+                onMinPriceChange={setMinPrice}
+                onMaxPriceChange={setMaxPrice}
+              />
+            </TabsContent>
 
-              {/* Preço */}
-              <div>
-                <h4 className="font-semibold mb-2 text-navy-900 dark:text-white">Preço</h4>
-                <div className="space-y-4">
-                  <div className="flex gap-2">
-                    <Input
-                      value={minPrice}
-                      onChange={e => setMinPrice(e.target.value)}
-                      placeholder="Mínimo"
-                      className="dark:bg-[#232c43] dark:text-white"
-                      type="number"
-                      min={0}
-                    />
-                    <Input
-                      value={maxPrice}
-                      onChange={e => setMaxPrice(e.target.value)}
-                      placeholder="Máximo"
-                      className="dark:bg-[#232c43] dark:text-white"
-                      type="number"
-                      min={0}
-                    />
-                  </div>
-                  <label className="flex items-center gap-2">
-                    <Checkbox
-                      checked={showPriceOnly}
-                      onCheckedChange={(checked) => setShowPriceOnly(checked as boolean)}
-                    />
-                    <span className="text-navy-700 dark:text-white">Mostrar apenas imóveis com preço</span>
-                  </label>
-                </div>
-              </div>
+            <TabsContent value="caracteristicas">
+              <PropertyFeatures
+                features={features}
+                onFeatureChange={(feature, checked) => setFeatures(prev => ({
+                  ...prev,
+                  [feature]: checked
+                }))}
+              />
+            </TabsContent>
 
-              {/* Filtros de Condomínio e IPTU */}
-              <div className="flex gap-4">
-                <div className="flex-1">
-                  <h4 className="font-semibold mb-2 text-navy-900 dark:text-white">Condomínio (R$)</h4>
-                  <div className="flex gap-2">
-                    <Input
-                      value={minCondo}
-                      onChange={e => setMinCondo(e.target.value)}
-                      placeholder="Mínimo"
-                      className="dark:bg-[#232c43] dark:text-white"
-                      type="number"
-                      min={0}
-                    />
-                    <Input
-                      value={maxCondo}
-                      onChange={e => setMaxCondo(e.target.value)}
-                      placeholder="Máximo"
-                      className="dark:bg-[#232c43] dark:text-white"
-                      type="number"
-                      min={0}
-                    />
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <h4 className="font-semibold mb-2 text-navy-900 dark:text-white">IPTU (R$)</h4>
-                  <div className="flex gap-2">
-                    <Input
-                      value={minIptu}
-                      onChange={e => setMinIptu(e.target.value)}
-                      placeholder="Mínimo"
-                      className="dark:bg-[#232c43] dark:text-white"
-                      type="number"
-                      min={0}
-                    />
-                    <Input
-                      value={maxIptu}
-                      onChange={e => setMaxIptu(e.target.value)}
-                      placeholder="Máximo"
-                      className="dark:bg-[#232c43] dark:text-white"
-                      type="number"
-                      min={0}
-                    />
-                  </div>
-                </div>
-              </div>
+            <TabsContent value="idade">
+              <PropertyAge
+                minAge={minAge}
+                maxAge={maxAge}
+                onMinAgeChange={setMinAge}
+                onMaxAgeChange={setMaxAge}
+              />
+            </TabsContent>
 
-              {/* Quartos, Banheiros, Vagas */}
-              <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <h4 className="font-semibold mb-2 text-navy-900 dark:text-white">Quartos</h4>
-                  <Select
-                    value={bedrooms === 0 ? '' : bedrooms.toString()}
-                    onValueChange={(value) => setBedrooms(Number(value))}
-                  >
-                    <SelectTrigger className="dark:bg-[#232c43] dark:text-white">
-                      <SelectValue placeholder="Mínimo" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
-                        <SelectItem key={num} value={num.toString()}>
-                          {num}+
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <h4 className="font-semibold mb-2 text-navy-900 dark:text-white">Banheiros</h4>
-                  <Select
-                    value={bathrooms === 0 ? '' : bathrooms.toString()}
-                    onValueChange={(value) => setBathrooms(Number(value))}
-                  >
-                    <SelectTrigger className="dark:bg-[#232c43] dark:text-white">
-                      <SelectValue placeholder="Mínimo" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
-                        <SelectItem key={num} value={num.toString()}>
-                          {num}+
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <h4 className="font-semibold mb-2 text-navy-900 dark:text-white">Vagas</h4>
-                  <Select
-                    value={parkingSpots === 0 ? '' : parkingSpots.toString()}
-                    onValueChange={(value) => setParkingSpots(Number(value))}
-                  >
-                    <SelectTrigger className="dark:bg-[#232c43] dark:text-white">
-                      <SelectValue placeholder="Mínimo" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
-                        <SelectItem key={num} value={num.toString()}>
-                          {num}+
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
+            <TabsContent value="tamanho">
+              <SizeFilters
+                landSize={landSize}
+                buildingSize={buildingSize}
+                onLandSizeChange={(min, max) => setLandSize([min, max])}
+                onBuildingSizeChange={(min, max) => setBuildingSize([min, max])}
+              />
+            </TabsContent>
+          </Tabs>
 
-              {/* Área */}
-              <div>
-                <h4 className="font-semibold mb-2 text-navy-900 dark:text-white">Área do terreno</h4>
-                <div className="flex gap-2">
-                  <Input
-                    value={landSize[0]}
-                    onChange={e => setLandSize([Number(e.target.value), landSize[1]])}
-                    placeholder="Mínimo (m²)"
-                    className="dark:bg-[#232c43] dark:text-white"
-                    type="number"
-                    min={0}
-                  />
-                  <Input
-                    value={landSize[1]}
-                    onChange={e => setLandSize([landSize[0], Number(e.target.value)])}
-                    placeholder="Máximo (m²)"
-                    className="dark:bg-[#232c43] dark:text-white"
-                    type="number"
-                    min={0}
-                  />
-                </div>
-              </div>
+          <div className="flex justify-end gap-4 mt-4">
+            <Button variant="outline" onClick={handleClearFilters}>
+              Limpar Filtros
+            </Button>
+            <Button onClick={handleSearch}>
+              Aplicar Filtros
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
 
-              {/* Propriedade */}
-              <div>
-                <h4 className="font-semibold mb-2 text-navy-900 dark:text-white">Propriedade</h4>
-                <div className="space-y-2">
-                  <label className="flex items-center gap-2">
-                    <Checkbox
-                      checked={features.new}
-                      onCheckedChange={(checked) => setFeatures({...features, new: checked as boolean})}
-                    />
-                    <span className="text-navy-700 dark:text-white">Nova</span>
-                  </label>
-                  <label className="flex items-center gap-2">
-                    <Checkbox
-                      checked={!features.new}
-                      onCheckedChange={(checked) => setFeatures({...features, new: !checked})}
-                    />
-                    <span className="text-navy-700 dark:text-white">Estabelecida</span>
-                  </label>
-                </div>
-              </div>
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const params = new URLSearchParams();
+    
+    if (minPrice) params.append('minPrice', minPrice);
+    if (maxPrice) params.append('maxPrice', maxPrice);
+    if (minAge) params.append('minAge', minAge);
+    if (maxAge) params.append('maxAge', maxAge);
+    if (landSize[0] > 0) params.append('minLandSize', landSize[0].toString());
+    if (landSize[1] < 1000) params.append('maxLandSize', landSize[1].toString());
+    if (buildingSize[0] > 0) params.append('minBuildingSize', buildingSize[0].toString());
+    if (buildingSize[1] < 1000) params.append('maxBuildingSize', buildingSize[1].toString());
+    
+    const activeFeatures = Object.entries(features)
+      .filter(([_, value]) => value)
+      .map(([key]) => key);
+    
+    if (activeFeatures.length > 0) {
+      params.append('features', activeFeatures.join(','));
+    }
+    
+    navigate(`/properties?${params.toString()}`);
+  };
 
-              {/* Características Externas */}
-              <div>
-                <h4 className="font-semibold mb-2 text-navy-900 dark:text-white">Características Externas</h4>
-                <div className="grid grid-cols-2 gap-2">
-                  <label className="flex items-center gap-2">
-                    <Checkbox
-                      checked={features.pool}
-                      onCheckedChange={(checked) => setFeatures({...features, pool: checked as boolean})}
-                    />
-                    <span className="text-navy-700 dark:text-white">Piscina</span>
-                  </label>
-                  <label className="flex items-center gap-2">
-                    <Checkbox
-                      checked={features.garage}
-                      onCheckedChange={(checked) => setFeatures({...features, garage: checked as boolean})}
-                    />
-                    <span className="text-navy-700 dark:text-white">Garagem</span>
-                  </label>
-                  <label className="flex items-center gap-2">
-                    <Checkbox
-                      checked={features.balcony}
-                      onCheckedChange={(checked) => setFeatures({...features, balcony: checked as boolean})}
-                    />
-                    <span className="text-navy-700 dark:text-white">Varanda</span>
-                  </label>
-                  <label className="flex items-center gap-2">
-                    <Checkbox
-                      checked={features.garden}
-                      onCheckedChange={(checked) => setFeatures({...features, garden: checked as boolean})}
-                    />
-                    <span className="text-navy-700 dark:text-white">Jardim</span>
-                  </label>
-                  <label className="flex items-center gap-2">
-                    <Checkbox
-                      checked={features.barbecue}
-                      onCheckedChange={(checked) => setFeatures({...features, barbecue: checked as boolean})}
-                    />
-                    <span className="text-navy-700 dark:text-white">Churrasqueira</span>
-                  </label>
-                </div>
-              </div>
+  const handleClearFilters = () => {
+    setMinPrice('');
+    setMaxPrice('');
+    setMinAge('');
+    setMaxAge('');
+    setLandSize([0, 1000]);
+    setBuildingSize([0, 1000]);
+    setFeatures({
+      pool: false,
+      balcony: false,
+      furnished: false,
+      pet: false,
+      accessible: false,
+      photo: false,
+      new: false,
+      garage: false,
+      garden: false,
+      barbecue: false,
+      office: false,
+      builtInWardrobe: false,
+      laundry: false,
+      airConditioning: false,
+      heating: false,
+      solarPanels: false,
+      fireplace: false,
+      groundFloor: false,
+      noSteps: false,
+      wideDoors: false,
+      elevator: false,
+      old: false,
+      veryOld: false,
+      suite: false,
+      dishwasher: false,
+      builtIn: false,
+      security: false,
+    });
+  };
 
-              {/* Características Internas */}
-              <div>
-                <h4 className="font-semibold mb-2 text-navy-900 dark:text-white">Características Internas</h4>
-                <div className="grid grid-cols-2 gap-2">
-                  <label className="flex items-center gap-2">
-                    <Checkbox
-                      checked={features.office}
-                      onCheckedChange={(checked) => setFeatures({...features, office: checked as boolean})}
-                    />
+  const handleApplyFilters = () => {
+    handleSearch(location);
+  };
+
+  return (
+    <div className="flex flex-col gap-4">
+      <Tabs defaultValue="comprar" value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="comprar">Comprar</TabsTrigger>
+          <TabsTrigger value="alugar">Alugar</TabsTrigger>
+        </TabsList>
+      </Tabs>
+
+      <div className="flex items-center gap-4">
+        <Input
+          placeholder="Localização"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          className="flex-1"
+        />
+        <Button onClick={() => setIsOpen(true)}>
+          Filtros
+        </Button>
+      </div>
+
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent>
+          <Tabs defaultValue="preco">
+            <TabsList>
+              <TabsTrigger value="preco">Preço</TabsTrigger>
+              <TabsTrigger value="caracteristicas">Características</TabsTrigger>
+              <TabsTrigger value="idade">Idade</TabsTrigger>
+              <TabsTrigger value="tamanho">Tamanho</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="preco">
+              <PriceFilters
+                minPrice={minPrice}
+                maxPrice={maxPrice}
+                onMinPriceChange={setMinPrice}
+                onMaxPriceChange={setMaxPrice}
+              />
+            </TabsContent>
+
+            <TabsContent value="caracteristicas">
+              <PropertyFeatures
+                features={features}
+                onFeaturesChange={setFeatures}
+              />
+            </TabsContent>
+
+            <TabsContent value="idade">
+              <PropertyAge
+                minAge={minAge}
+                maxAge={maxAge}
+                onMinAgeChange={setMinAge}
+                onMaxAgeChange={setMaxAge}
+              />
+            </TabsContent>
+
+            <TabsContent value="tamanho">
+              <SizeFilters
+                landSize={landSize}
+                buildingSize={buildingSize}
+                onLandSizeChange={setLandSize}
+                onBuildingSizeChange={setBuildingSize}
+              />
+            </TabsContent>
+          </Tabs>
+
+          <div className="flex justify-end gap-4 mt-4">
+            <Button variant="outline" onClick={handleClearFilters}>
+              Limpar Filtros
+            </Button>
+            <Button onClick={handleSearch}>
+              Aplicar Filtros
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+};
+
+};)}
+  </div>
+  
+  <div className="flex gap-4 items-center">
+    <div className="flex-1">
+      <Input
+        value={location}
+        onChange={e => setLocation(e.target.value)}
+        placeholder="Digite o endereço, bairro ou cidade..."
+        className="dark:bg-[#232c43] dark:text-white"
+      />
+    </div>
+    <Button
+      onClick={() => setIsOpen(true)}
+      variant="outline"
+      className="border-navy-600 text-navy-600 hover:bg-navy-50 dark:border-navy-400 dark:text-navy-400 dark:hover:bg-navy-900"
+    >
+      Filtros
+    </Button>
+  </div>
+
+  <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <DialogContent className="sm:max-w-[625px]">
+      <DialogHeader>
+        <DialogTitle>Filtros de Busca</DialogTitle>
+      </DialogHeader>
+      <Tabs defaultValue="price" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="price">Preço</TabsTrigger>
+          <TabsTrigger value="features">Características</TabsTrigger>
+          <TabsTrigger value="age">Idade</TabsTrigger>
+          <TabsTrigger value="size">Tamanho</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="price">
+          <div>
+            <Label className="font-semibold mb-2 text-navy-900 dark:text-white">Preço</Label>
+            <div className="space-y-4">
+              <div className="flex gap-2">
+                onFeatureChange={(feature, checked) => setFeatures({...features, [feature]: checked})}
+              />
                     <span className="text-navy-700 dark:text-white">Escritório</span>
                   </label>
                   <label className="flex items-center gap-2">
@@ -590,30 +519,6 @@ const SearchFilters: React.FC = () => {
                     checked={excludeUnderContract}
                     onCheckedChange={(checked) => setExcludeUnderContract(checked as boolean)}
                   />
-                  <span className="text-navy-700 dark:text-white">Excluir imóveis sob contrato</span>
-                </label>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="alugar" className="space-y-6">
-              <div>
-                <h4 className="font-semibold mb-2 text-navy-900 dark:text-white">Tipo de imóvel</h4>
-                <div className="grid grid-cols-2 gap-2">
-                  {['todos', 'casa', 'apartamento', 'terreno', 'comercial', 'vila', 'rural', 'condomínio', 'outros'].map(type => (
-                    <label key={type} className="flex items-center gap-2">
-                      <Checkbox
-                        checked={propertyTypes.includes(type)}
-                        onCheckedChange={(checked) => {
-                          if (checked) setPropertyTypes([...propertyTypes, type]);
-                          else setPropertyTypes(propertyTypes.filter(t => t !== type));
-                        }}
-                      />
-                      <span className="text-navy-700 dark:text-white">{type.charAt(0).toUpperCase() + type.slice(1)}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
               {/* Preço do Aluguel */}
               <div>
                 <h4 className="font-semibold mb-2 text-navy-900 dark:text-white">Preço do Aluguel</h4>
@@ -799,30 +704,9 @@ const SearchFilters: React.FC = () => {
                 <h4 className="font-semibold mb-2 text-navy-900 dark:text-white">Características do Imóvel</h4>
                 <div className="space-y-4">
                   <div>
-                    <h5 className="text-sm font-medium text-navy-700 dark:text-white mb-2">Tipo de Propriedade</h5>
-                    <div className="grid grid-cols-2 gap-2">
-                      <label className="flex items-center gap-2">
-                        <Checkbox
-                          checked={features.new}
-                          onCheckedChange={(checked) => setFeatures({...features, new: checked as boolean})}
-                        />
-                        <span className="text-navy-700 dark:text-white">Nova</span>
-                      </label>
-                      <label className="flex items-center gap-2">
-                        <Checkbox
-                          checked={features.established}
-                          onCheckedChange={(checked) => setFeatures({...features, established: checked as boolean})}
-                        />
-                        <span className="text-navy-700 dark:text-white">Estabelecida</span>
-                      </label>
-                    </div>
-                  </div>
-
-                  <div>
                     <h5 className="text-sm font-medium text-navy-700 dark:text-white mb-2">Características Externas</h5>
                     <div className="grid grid-cols-2 gap-2">
-                      {[
-                        { id: 'pool', label: 'Piscina' },
+                      {[/* ... */].map(feature => (
                         { id: 'garage', label: 'Garagem' },
                         { id: 'garden', label: 'Jardim' },
                         { id: 'balcony', label: 'Varanda' },
