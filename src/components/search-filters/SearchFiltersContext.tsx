@@ -8,6 +8,16 @@ interface SearchFiltersContextType {
   maxPrice: number;
   setMinPrice: React.Dispatch<React.SetStateAction<number>>;
   setMaxPrice: React.Dispatch<React.SetStateAction<number>>;
+  includeTotalPrice: boolean;
+  setIncludeTotalPrice: React.Dispatch<React.SetStateAction<boolean>>;
+  minCondoFee: number;
+  maxCondoFee: number;
+  setMinCondoFee: React.Dispatch<React.SetStateAction<number>>;
+  setMaxCondoFee: React.Dispatch<React.SetStateAction<number>>;
+  minPropertyTax: number;
+  maxPropertyTax: number;
+  setMinPropertyTax: React.Dispatch<React.SetStateAction<number>>;
+  setMaxPropertyTax: React.Dispatch<React.SetStateAction<number>>;
   minAge: number;
   maxAge: number;
   setMinAge: React.Dispatch<React.SetStateAction<number>>;
@@ -44,6 +54,11 @@ export const SearchFiltersProvider: React.FC<{ children: React.ReactNode }> = ({
   const [propertyTypes, setPropertyTypes] = useState<string[]>([]);
   const [minPrice, setMinPrice] = useState<number>(0);
   const [maxPrice, setMaxPrice] = useState<number>(0);
+  const [includeTotalPrice, setIncludeTotalPrice] = useState<boolean>(false);
+  const [minCondoFee, setMinCondoFee] = useState<number>(0);
+  const [maxCondoFee, setMaxCondoFee] = useState<number>(0);
+  const [minPropertyTax, setMinPropertyTax] = useState<number>(0);
+  const [maxPropertyTax, setMaxPropertyTax] = useState<number>(0);
   const [minAge, setMinAge] = useState<number>(0);
   const [maxAge, setMaxAge] = useState<number>(0);
   const [landSize, setLandSize] = useState<[number, number]>([0, 0]);
@@ -96,6 +111,16 @@ export const SearchFiltersProvider: React.FC<{ children: React.ReactNode }> = ({
         maxPrice,
         setMinPrice,
         setMaxPrice,
+        includeTotalPrice,
+        setIncludeTotalPrice,
+        minCondoFee,
+        maxCondoFee,
+        setMinCondoFee,
+        setMaxCondoFee,
+        minPropertyTax,
+        maxPropertyTax,
+        setMinPropertyTax,
+        setMaxPropertyTax,
         minAge,
         maxAge,
         setMinAge,

@@ -30,9 +30,9 @@ export const RoomFilters: React.FC<RoomFiltersProps> = ({
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="any">Qualquer</SelectItem>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
+        {[1, 2, 3, 4, 5].map(num => (
           <SelectItem key={num} value={num.toString()}>
-            {num}+
+            {num === 5 ? "5+" : num}
           </SelectItem>
         ))}
       </SelectContent>

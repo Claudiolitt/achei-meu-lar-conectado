@@ -26,6 +26,16 @@ const SearchFilterContent: React.FC<SearchFilterContentProps> = ({
     maxPrice,
     setMinPrice,
     setMaxPrice,
+    includeTotalPrice,
+    setIncludeTotalPrice,
+    minCondoFee,
+    maxCondoFee,
+    setMinCondoFee,
+    setMaxCondoFee,
+    minPropertyTax,
+    maxPropertyTax,
+    setMinPropertyTax,
+    setMaxPropertyTax,
     features,
     setFeatures,
     minAge,
@@ -64,6 +74,16 @@ const SearchFilterContent: React.FC<SearchFilterContentProps> = ({
           maxPrice={maxPrice}
           onMinPriceChange={setMinPrice}
           onMaxPriceChange={setMaxPrice}
+          includeTotalPrice={includeTotalPrice}
+          onIncludeTotalPriceChange={setIncludeTotalPrice}
+          minCondoFee={minCondoFee}
+          maxCondoFee={maxCondoFee}
+          onMinCondoFeeChange={setMinCondoFee}
+          onMaxCondoFeeChange={setMaxCondoFee}
+          minPropertyTax={minPropertyTax}
+          maxPropertyTax={maxPropertyTax}
+          onMinPropertyTaxChange={setMinPropertyTax}
+          onMaxPropertyTaxChange={setMaxPropertyTax}
         />
         <PropertyFeatures
           features={features}
@@ -71,6 +91,7 @@ const SearchFilterContent: React.FC<SearchFilterContentProps> = ({
             ...prev,
             [feature]: checked
           }))}
+          transactionType={transactionType}
         />
         <PropertyAge
           minAge={minAge}
@@ -105,6 +126,7 @@ const SearchFilterContent: React.FC<SearchFilterContentProps> = ({
           excludeUnderContract={excludeUnderContract}
           onKeywordsChange={setKeywords}
           onExcludeUnderContractChange={setExcludeUnderContract}
+          transactionType={transactionType}
         />
       </div>
     </div>

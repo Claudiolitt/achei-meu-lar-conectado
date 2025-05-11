@@ -8,20 +8,30 @@ interface PropertyFeaturesProps {
     [key: string]: boolean;
   };
   onFeatureChange: (feature: string, checked: boolean) => void;
+  transactionType: 'buy' | 'rent';
 }
 
 export const PropertyFeatures: React.FC<PropertyFeaturesProps> = ({
   features,
   onFeatureChange,
+  transactionType
 }) => {
-  const featureOptions = [
+  const commonFeatureOptions = [
     { id: 'pool', label: 'Piscina' },
     { id: 'balcony', label: 'Sacada' },
     { id: 'furnished', label: 'Mobiliado' },
-    { id: 'pet', label: 'Aceita Pets' },
     { id: 'accessible', label: 'Acessível' },
     { id: 'photo', label: 'Com Fotos' },
   ];
+  
+  // Pet option only for rent
+  const rentOnlyOptions = [
+    { id: 'pet', label: 'Aceita Pets' },
+  ];
+  
+  const featureOptions = transactionType === 'rent' 
+    ? [...commonFeatureOptions, ...rentOnlyOptions] 
+    : commonFeatureOptions;
 
   return (
     <div>

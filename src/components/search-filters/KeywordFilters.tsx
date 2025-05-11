@@ -8,13 +8,15 @@ interface KeywordFiltersProps {
   excludeUnderContract: boolean;
   onKeywordsChange: (value: string) => void;
   onExcludeUnderContractChange: (checked: boolean) => void;
+  transactionType: 'buy' | 'rent';
 }
 
 export const KeywordFilters: React.FC<KeywordFiltersProps> = ({
   keywords,
   excludeUnderContract,
   onKeywordsChange,
-  onExcludeUnderContractChange
+  onExcludeUnderContractChange,
+  transactionType
 }) => {
   return (
     <div className="space-y-4">
@@ -28,15 +30,17 @@ export const KeywordFilters: React.FC<KeywordFiltersProps> = ({
         />
       </div>
 
-      <div>
-        <label className="flex items-center gap-2 cursor-pointer">
-          <Checkbox
-            checked={excludeUnderContract}
-            onCheckedChange={(checked) => onExcludeUnderContractChange(checked as boolean)}
-          />
-          <span className="text-navy-700 dark:text-white">Excluir imóveis sob contrato</span>
-        </label>
-      </div>
+      {transactionType === 'rent' && (
+        <div>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <Checkbox
+              checked={excludeUnderContract}
+              onCheckedChange={(checked) => onExcludeUnderContractChange(checked as boolean)}
+            />
+            <span className="text-navy-700 dark:text-white">Excluir imóveis sob contrato</span>
+          </label>
+        </div>
+      )}
     </div>
   );
 };
