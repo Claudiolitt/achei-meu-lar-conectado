@@ -1,75 +1,38 @@
+
 import React, { useState } from 'react';
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useNavigate } from "react-router-dom";
-import { PropertyType } from "@/types/property";
-import { PriceFilters } from "@/components/search-filters/PriceFilters";
-import { PropertyFeatures } from "@/components/search-filters/PropertyFeatures";
-import { PropertyAge } from "@/components/search-filters/PropertyAge";
-import { SizeFilters } from "@/components/search-filters/SizeFilters";
-import { ContractDurationFilters } from "@/components/search-filters/ContractDurationFilters";
-import { PropertyCharacteristics } from "@/components/search-filters/PropertyCharacteristics";
-import { RoomFilters } from "@/components/search-filters/RoomFilters";
-import { KeywordFilters } from "@/components/search-filters/KeywordFilters";
-import { PropertyTypeSelector } from "@/components/search-filters/PropertyTypeSelector";
-import AutocompleteSearch from "@/components/AutocompleteSearch";
+import QuickSearchBar from './search-filters/QuickSearchBar';
+import SearchDialogContent from './search-filters/SearchDialogContent';
+import { SearchFiltersProvider } from './search-filters/SearchFiltersContext';
+import { useSearchFiltersContext } from './search-filters/SearchFiltersContext';
 
-const SearchFilters: React.FC = () => {
+const SearchFiltersContent: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [propertyTypes, setPropertyTypes] = useState<string[]>([]);
-  const [minPrice, setMinPrice] = useState<number>(0);
-  const [maxPrice, setMaxPrice] = useState<number>(0);
-  const [minAge, setMinAge] = useState<number>(0);
-  const [maxAge, setMaxAge] = useState<number>(0);
-  const [landSize, setLandSize] = useState<[number, number]>([0, 0]);
-  const [buildingSize, setBuildingSize] = useState<[number, number]>([0, 0]);
-  const [minContractDuration, setMinContractDuration] = useState<number>(0);
-  const [maxContractDuration, setMaxContractDuration] = useState<number>(0);
-  const [bedrooms, setBedrooms] = useState<number>(0);
-  const [bathrooms, setBathrooms] = useState<number>(0);
-  const [parkingSpots, setParkingSpots] = useState<number>(0);
-  const [keywords, setKeywords] = useState<string>("");
-  const [excludeUnderContract, setExcludeUnderContract] = useState<boolean>(false);
-  const [features, setFeatures] = useState<{
-    [key: string]: boolean;
-  }>({
-    pool: false,
-    balcony: false,
-    furnished: false,
-    pet: false,
-    accessible: false,
-    photo: false,
-    new: false,
-    garage: false,
-    garden: false,
-    barbecue: false,
-    office: false,
-    builtInWardrobe: false,
-    laundry: false,
-    airConditioning: false,
-    heating: false,
-    solarPanels: false,
-    fireplace: false,
-    groundFloor: false,
-    noSteps: false,
-    wideDoors: false,
-    elevator: false,
-    old: false,
-    veryOld: false,
-    suite: false,
-    dishwasher: false,
-    builtIn: false,
-    security: false,
-  });
-  const navigate = useNavigate();
   const [location, setLocation] = useState('');
   const [activeTab, setActiveTab] = useState('comprar');
   const [dialogActiveTab, setDialogActiveTab] = useState('buy');
+  const navigate = useNavigate();
+  
+  const {
+    propertyTypes,
+    minPrice,
+    maxPrice,
+    minAge,
+    maxAge,
+    landSize,
+    buildingSize,
+    minContractDuration,
+    maxContractDuration,
+    bedrooms,
+    bathrooms,
+    parkingSpots,
+    keywords,
+    excludeUnderContract,
+    features,
+  } = useSearchFiltersContext();
 
-  // Sincronizar tabs entre o diálogo e o principal
+  // Syncronize tabs between dialog and main
   const handleTabChange = (value: string) => {
     setActiveTab(value);
     setDialogActiveTab(value === 'comprar' ? 'buy' : 'rent');
@@ -115,9 +78,33 @@ const SearchFilters: React.FC = () => {
     }
     
     navigate(`/properties?${params.toString()}`);
+    
+    // Close dialog if open
+    if (isOpen) {
+      setIsOpen(false);
+    }
   };
 
   const handleClearFilters = () => {
+    // Context will handle this through useSearchFiltersContext
+    const {
+      setPropertyTypes,
+      setMinPrice,
+      setMaxPrice,
+      setMinAge,
+      setMaxAge,
+      setLandSize,
+      setBuildingSize,
+      setMinContractDuration,
+      setMaxContractDuration,
+      setBedrooms,
+      setBathrooms,
+      setParkingSpots,
+      setKeywords,
+      setExcludeUnderContract,
+      setFeatures,
+    } = useSearchFiltersContext();
+
     setPropertyTypes([]);
     setMinPrice(0);
     setMaxPrice(0);
@@ -168,174 +155,41 @@ const SearchFilters: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <Tabs value={activeTab} onValueChange={handleTabChange}>
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="comprar">Comprar</TabsTrigger>
-          <TabsTrigger value="alugar">Alugar</TabsTrigger>
-        </TabsList>
-      </Tabs>
-
-      <div className="flex items-center gap-4">
-        <div className="flex-1">
-          <AutocompleteSearch
-            value={location}
-            onChange={setLocation}
-            placeholder="Digite o endereço, bairro ou cidade..."
-          />
-        </div>
-        <div className="flex gap-2">
-          <Button
-            onClick={() => setIsOpen(true)}
-            variant="outline"
-            className="border-navy-600 text-navy-600 hover:bg-navy-50 dark:border-navy-400 dark:text-navy-400 dark:hover:bg-navy-900"
-          >
-            Filtros
-          </Button>
-          <Button 
-            onClick={handleQuickSearch}
-            className="bg-navy-700 hover:bg-navy-800 text-white"
-          >
-            Buscar
-          </Button>
-        </div>
-      </div>
+    <>
+      <QuickSearchBar
+        activeTab={activeTab}
+        onTabChange={handleTabChange}
+        location={location}
+        onLocationChange={setLocation}
+        onFilterClick={() => setIsOpen(true)}
+        onQuickSearch={handleQuickSearch}
+      />
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="sm:max-w-[625px] max-h-[90vh]">
           <DialogHeader>
             <DialogTitle>Filtros de Busca</DialogTitle>
           </DialogHeader>
-          <Tabs value={dialogActiveTab} onValueChange={handleDialogTabChange}>
-            <TabsList>
-              <TabsTrigger value="buy">Comprar</TabsTrigger>
-              <TabsTrigger value="rent">Alugar</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="buy">
-              <div className="max-h-[70vh] overflow-y-auto">
-                <div className="space-y-6 p-1">
-                  <PropertyTypeSelector
-                    propertyTypes={propertyTypes}
-                    onPropertyTypesChange={setPropertyTypes}
-                  />
-                  <PriceFilters
-                    minPrice={minPrice}
-                    maxPrice={maxPrice}
-                    onMinPriceChange={setMinPrice}
-                    onMaxPriceChange={setMaxPrice}
-                  />
-                  <PropertyFeatures
-                    features={features}
-                    onFeatureChange={(feature, checked) => setFeatures(prev => ({
-                      ...prev,
-                      [feature]: checked
-                    }))}
-                  />
-                  <PropertyAge
-                    minAge={minAge}
-                    maxAge={maxAge}
-                    onMinAgeChange={setMinAge}
-                    onMaxAgeChange={setMaxAge}
-                  />
-                  <SizeFilters
-                    landSize={landSize}
-                    buildingSize={buildingSize}
-                    onLandSizeChange={(min, max) => setLandSize([min, max])}
-                    onBuildingSizeChange={(min, max) => setBuildingSize([min, max])}
-                  />
-                  <RoomFilters
-                    bedrooms={bedrooms}
-                    bathrooms={bathrooms}
-                    parkingSpots={parkingSpots}
-                    onBedroomsChange={setBedrooms}
-                    onBathroomsChange={setBathrooms}
-                    onParkingSpotsChange={setParkingSpots}
-                  />
-                  <KeywordFilters
-                    keywords={keywords}
-                    excludeUnderContract={excludeUnderContract}
-                    onKeywordsChange={setKeywords}
-                    onExcludeUnderContractChange={setExcludeUnderContract}
-                  />
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="rent">
-              <div className="max-h-[70vh] overflow-y-auto">
-                <div className="space-y-6 p-1">
-                  <PropertyTypeSelector
-                    propertyTypes={propertyTypes}
-                    onPropertyTypesChange={setPropertyTypes}
-                  />
-                  <PriceFilters
-                    minPrice={minPrice}
-                    maxPrice={maxPrice}
-                    onMinPriceChange={setMinPrice}
-                    onMaxPriceChange={setMaxPrice}
-                  />
-                  <PropertyFeatures
-                    features={features}
-                    onFeatureChange={(feature, checked) => setFeatures(prev => ({
-                      ...prev,
-                      [feature]: checked
-                    }))}
-                  />
-                  <PropertyAge
-                    minAge={minAge}
-                    maxAge={maxAge}
-                    onMinAgeChange={setMinAge}
-                    onMaxAgeChange={setMaxAge}
-                  />
-                  <SizeFilters
-                    landSize={landSize}
-                    buildingSize={buildingSize}
-                    onLandSizeChange={(min, max) => setLandSize([min, max])}
-                    onBuildingSizeChange={(min, max) => setBuildingSize([min, max])}
-                  />
-                  <ContractDurationFilters
-                    minContractDuration={minContractDuration}
-                    maxContractDuration={maxContractDuration}
-                    onMinContractDurationChange={setMinContractDuration}
-                    onMaxContractDurationChange={setMaxContractDuration}
-                  />
-                  <RoomFilters
-                    bedrooms={bedrooms}
-                    bathrooms={bathrooms}
-                    parkingSpots={parkingSpots}
-                    onBedroomsChange={setBedrooms}
-                    onBathroomsChange={setBathrooms}
-                    onParkingSpotsChange={setParkingSpots}
-                  />
-                  <KeywordFilters
-                    keywords={keywords}
-                    excludeUnderContract={excludeUnderContract}
-                    onKeywordsChange={setKeywords}
-                    onExcludeUnderContractChange={setExcludeUnderContract}
-                  />
-                </div>
-              </div>
-            </TabsContent>
-          </Tabs>
-
-          <div className="mt-4 flex justify-end gap-2">
-            <Button
-              variant="outline"
-              onClick={handleClearFilters}
-            >
-              Limpar Filtros
-            </Button>
-            <Button onClick={handleSearch}>
-              Aplicar Filtros
-            </Button>
-          </div>
-          <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-            Fechar
-          </DialogClose>
+          <SearchDialogContent
+            activeTab={activeTab}
+            dialogActiveTab={dialogActiveTab}
+            onTabChange={handleTabChange}
+            onDialogTabChange={handleDialogTabChange}
+            onSearch={handleSearch}
+            onClearFilters={handleClearFilters}
+          />
         </DialogContent>
       </Dialog>
-    </div>
+    </>
+  );
+};
+
+// Wrap the component with the context provider
+const SearchFilters: React.FC = () => {
+  return (
+    <SearchFiltersProvider>
+      <SearchFiltersContent />
+    </SearchFiltersProvider>
   );
 };
 
