@@ -1,10 +1,9 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 
 import { useNavigate } from "react-router-dom";
 import { PropertyType } from "@/types/property";
@@ -17,6 +16,7 @@ import { PropertyCharacteristics } from "@/components/search-filters/PropertyCha
 import { RoomFilters } from "@/components/search-filters/RoomFilters";
 import { KeywordFilters } from "@/components/search-filters/KeywordFilters";
 import { PropertyTypeSelector } from "@/components/search-filters/PropertyTypeSelector";
+import AutocompleteSearch from "@/components/AutocompleteSearch";
 
 const SearchFilters: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -68,19 +68,40 @@ const SearchFilters: React.FC = () => {
   const navigate = useNavigate();
   const [location, setLocation] = useState('');
   const [activeTab, setActiveTab] = useState('comprar');
+  const [dialogActiveTab, setDialogActiveTab] = useState('buy');
+
+  // Sincronizar tabs entre o diálogo e o principal
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    setDialogActiveTab(value === 'comprar' ? 'buy' : 'rent');
+  };
+
+  const handleDialogTabChange = (value: string) => {
+    setDialogActiveTab(value);
+    setActiveTab(value === 'buy' ? 'comprar' : 'alugar');
+  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const params = new URLSearchParams();
     
+    params.append('transaction', activeTab === 'comprar' ? 'sale' : 'rent');
+    
+    if (propertyType) params.append('type', propertyType);
+    if (location) params.append('search', location);
     if (minPrice > 0) params.append('minPrice', minPrice.toString());
     if (maxPrice > 0) params.append('maxPrice', maxPrice.toString());
     if (minAge > 0) params.append('minAge', minAge.toString());
     if (maxAge > 0) params.append('maxAge', maxAge.toString());
     if (landSize[0] > 0) params.append('minLandSize', landSize[0].toString());
-    if (landSize[1] < 1000) params.append('maxLandSize', landSize[1].toString());
+    if (landSize[1] > 0) params.append('maxLandSize', landSize[1].toString());
     if (buildingSize[0] > 0) params.append('minBuildingSize', buildingSize[0].toString());
-    if (buildingSize[1] < 1000) params.append('maxBuildingSize', buildingSize[1].toString());
+    if (buildingSize[1] > 0) params.append('maxBuildingSize', buildingSize[1].toString());
+    if (bedrooms > 0) params.append('bedrooms', bedrooms.toString());
+    if (bathrooms > 0) params.append('bathrooms', bathrooms.toString());
+    if (parkingSpots > 0) params.append('parkingSpots', parkingSpots.toString());
+    if (keywords) params.append('keywords', keywords);
+    if (excludeUnderContract) params.append('excludeUnderContract', 'true');
     
     const activeFeatures = Object.entries(features)
       .filter(([_, value]) => value)
@@ -94,12 +115,20 @@ const SearchFilters: React.FC = () => {
   };
 
   const handleClearFilters = () => {
+    setPropertyType("");
     setMinPrice(0);
     setMaxPrice(0);
     setMinAge(0);
     setMaxAge(0);
-    setLandSize([0, 1000]);
-    setBuildingSize([0, 1000]);
+    setLandSize([0, 0]);
+    setBuildingSize([0, 0]);
+    setMinContractDuration(0);
+    setMaxContractDuration(0);
+    setBedrooms(0);
+    setBathrooms(0);
+    setParkingSpots(0);
+    setKeywords('');
+    setExcludeUnderContract(false);
     setFeatures({
       pool: false,
       balcony: false,
@@ -129,18 +158,15 @@ const SearchFilters: React.FC = () => {
       builtIn: false,
       security: false,
     });
-    setMinContractDuration(0);
-    setMaxContractDuration(0);
-    setBedrooms(0);
-    setBathrooms(0);
-    setParkingSpots(0);
-    setKeywords('');
-    setExcludeUnderContract(false);
+  };
+
+  const handleQuickSearch = () => {
+    handleSearch(new Event('submit') as unknown as React.FormEvent);
   };
 
   return (
     <div className="flex flex-col gap-4">
-      <Tabs defaultValue="comprar" value={activeTab} onValueChange={setActiveTab}>
+      <Tabs value={activeTab} onValueChange={handleTabChange}>
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="comprar">Comprar</TabsTrigger>
           <TabsTrigger value="alugar">Alugar</TabsTrigger>
@@ -149,20 +175,27 @@ const SearchFilters: React.FC = () => {
 
       <div className="flex items-center gap-4">
         <div className="flex-1">
-          <Input
+          <AutocompleteSearch
             value={location}
-            onChange={e => setLocation(e.target.value)}
+            onChange={setLocation}
             placeholder="Digite o endereço, bairro ou cidade..."
-            className="dark:bg-[#232c43] dark:text-white"
           />
         </div>
-        <Button
-          onClick={() => setIsOpen(true)}
-          variant="outline"
-          className="border-navy-600 text-navy-600 hover:bg-navy-50 dark:border-navy-400 dark:text-navy-400 dark:hover:bg-navy-900"
-        >
-          Filtros
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            onClick={() => setIsOpen(true)}
+            variant="outline"
+            className="border-navy-600 text-navy-600 hover:bg-navy-50 dark:border-navy-400 dark:text-navy-400 dark:hover:bg-navy-900"
+          >
+            Filtros
+          </Button>
+          <Button 
+            onClick={handleQuickSearch}
+            className="bg-navy-700 hover:bg-navy-800 text-white"
+          >
+            Buscar
+          </Button>
+        </div>
       </div>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -170,7 +203,7 @@ const SearchFilters: React.FC = () => {
           <DialogHeader>
             <DialogTitle>Filtros de Busca</DialogTitle>
           </DialogHeader>
-          <Tabs defaultValue="buy" className="w-full">
+          <Tabs value={dialogActiveTab} onValueChange={handleDialogTabChange}>
             <TabsList>
               <TabsTrigger value="buy">Comprar</TabsTrigger>
               <TabsTrigger value="rent">Alugar</TabsTrigger>
@@ -178,7 +211,7 @@ const SearchFilters: React.FC = () => {
 
             <TabsContent value="buy">
               <div className="max-h-[70vh] overflow-y-auto">
-                <div className="space-y-6">
+                <div className="space-y-6 p-1">
                   <PropertyTypeSelector
                     propertyType={propertyType}
                     onPropertyTypeChange={setPropertyType}
@@ -228,7 +261,7 @@ const SearchFilters: React.FC = () => {
 
             <TabsContent value="rent">
               <div className="max-h-[70vh] overflow-y-auto">
-                <div className="space-y-6">
+                <div className="space-y-6 p-1">
                   <PropertyTypeSelector
                     propertyType={propertyType}
                     onPropertyTypeChange={setPropertyType}
@@ -294,7 +327,9 @@ const SearchFilters: React.FC = () => {
               Aplicar Filtros
             </Button>
           </div>
-        <DialogClose onClick={() => setIsOpen(false)}>Fechar</DialogClose>
+          <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+            Fechar
+          </DialogClose>
         </DialogContent>
       </Dialog>
     </div>

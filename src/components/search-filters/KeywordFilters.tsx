@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -18,17 +19,17 @@ export const KeywordFilters: React.FC<KeywordFiltersProps> = ({
   return (
     <div className="space-y-4">
       <div>
-        <h4 className="font-semibold mb-2 text-navy-900 dark:text-white">Palavras-chave</h4>
+        <h4 className="font-semibold mb-2 block text-navy-900 dark:text-white">Palavras-chave</h4>
         <Input
           value={keywords}
           onChange={(e) => onKeywordsChange(e.target.value)}
           placeholder="Digite palavras-chave..."
-          className="dark:bg-[#232c43] dark:text-white"
+          className="dark:bg-[#232c43] dark:text-white w-full"
         />
       </div>
 
       <div>
-        <label className="flex items-center gap-2">
+        <label className="flex items-center gap-2 cursor-pointer">
           <Checkbox
             checked={excludeUnderContract}
             onCheckedChange={(checked) => onExcludeUnderContractChange(checked as boolean)}

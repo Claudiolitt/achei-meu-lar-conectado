@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -9,12 +10,16 @@ interface AutocompleteSearchProps {
   placeholder?: string;
   onSearch?: (query: string) => void;
   className?: string;
+  value?: string;
+  onChange?: (value: string) => void;
 }
 
 const AutocompleteSearch: React.FC<AutocompleteSearchProps> = ({ 
   placeholder = "Cidade, bairro ou endereço", 
   onSearch,
-  className = ""
+  className = "",
+  value: externalValue,
+  onChange: externalOnChange
 }) => {
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -23,6 +28,23 @@ const AutocompleteSearch: React.FC<AutocompleteSearchProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  
+  // Controle do componente (controlado ou não-controlado)
+  const isControlled = externalValue !== undefined && externalOnChange !== undefined;
+  
+  useEffect(() => {
+    if (isControlled) {
+      setQuery(externalValue || '');
+    }
+  }, [externalValue, isControlled]);
+
+  const updateQuery = (newValue: string) => {
+    if (isControlled) {
+      externalOnChange(newValue);
+    } else {
+      setQuery(newValue);
+    }
+  };
 
   useEffect(() => {
     // Load recent searches from localStorage
@@ -48,34 +70,35 @@ const AutocompleteSearch: React.FC<AutocompleteSearchProps> = ({
   }, []);
 
   useEffect(() => {
-    if (query.length >= 2) {
+    const currentQuery = isControlled ? externalValue : query;
+    if (currentQuery && currentQuery.length >= 2) {
       // Filter properties data to find matching locations or titles
       const uniqueLocations = new Set<string>();
       
       // Add neighborhoods
       mockProperties.forEach(property => {
-        if (property.address.neighborhood.toLowerCase().includes(query.toLowerCase())) {
+        if (property.address.neighborhood.toLowerCase().includes(currentQuery.toLowerCase())) {
           uniqueLocations.add(property.address.neighborhood);
         }
       });
       
       // Add cities
       mockProperties.forEach(property => {
-        if (property.address.city.toLowerCase().includes(query.toLowerCase())) {
+        if (property.address.city.toLowerCase().includes(currentQuery.toLowerCase())) {
           uniqueLocations.add(property.address.city);
         }
       });
       
       // Add streets
       mockProperties.forEach(property => {
-        if (property.address.street.toLowerCase().includes(query.toLowerCase())) {
+        if (property.address.street.toLowerCase().includes(currentQuery.toLowerCase())) {
           uniqueLocations.add(property.address.street);
         }
       });
       
       // Add property titles
       mockProperties.forEach(property => {
-        if (property.title.toLowerCase().includes(query.toLowerCase())) {
+        if (property.title.toLowerCase().includes(currentQuery.toLowerCase())) {
           uniqueLocations.add(property.title);
         }
       });
@@ -84,14 +107,16 @@ const AutocompleteSearch: React.FC<AutocompleteSearchProps> = ({
     } else {
       setSuggestions([]);
     }
-  }, [query]);
+  }, [query, externalValue, isControlled]);
 
   const handleSearch = () => {
-    if (query.trim()) {
+    const currentQuery = isControlled ? externalValue : query;
+    
+    if (currentQuery && currentQuery.trim()) {
       // Add to recent searches
       const updatedSearches = [
-        query, 
-        ...recentSearches.filter(search => search !== query)
+        currentQuery, 
+        ...recentSearches.filter(search => search !== currentQuery)
       ].slice(0, 5);
       
       setRecentSearches(updatedSearches);
@@ -99,9 +124,9 @@ const AutocompleteSearch: React.FC<AutocompleteSearchProps> = ({
       
       // Call onSearch callback or navigate
       if (onSearch) {
-        onSearch(query);
+        onSearch(currentQuery);
       } else {
-        navigate(`/properties?search=${encodeURIComponent(query)}`);
+        navigate(`/properties?search=${encodeURIComponent(currentQuery)}`);
       }
       
       // Close suggestions
@@ -110,7 +135,7 @@ const AutocompleteSearch: React.FC<AutocompleteSearchProps> = ({
   };
 
   const handleSuggestionClick = (suggestion: string) => {
-    setQuery(suggestion);
+    updateQuery(suggestion);
     handleSearch();
   };
 
@@ -128,8 +153,8 @@ const AutocompleteSearch: React.FC<AutocompleteSearchProps> = ({
         <Input
           ref={inputRef}
           type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          value={isControlled ? externalValue : query}
+          onChange={(e) => updateQuery(e.target.value)}
           onKeyDown={handleKeyDown}
           onFocus={() => setIsFocused(true)}
           placeholder={placeholder}
