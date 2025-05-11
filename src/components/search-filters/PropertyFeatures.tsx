@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -27,13 +28,19 @@ export const PropertyFeatures: React.FC<PropertyFeaturesProps> = ({
       <Label className="font-semibold mb-2 text-navy-900 dark:text-white">Características</Label>
       <div className="grid grid-cols-2 gap-2">
         {featureOptions.map((option) => (
-          <label key={option.id} className="flex items-center gap-2">
+          <div key={option.id} className="flex items-center gap-2">
             <Checkbox
+              id={`feature-${option.id}`}
               checked={features[option.id]}
               onCheckedChange={(checked) => onFeatureChange(option.id, checked as boolean)}
             />
-            <span className="text-navy-700 dark:text-white">{option.label}</span>
-          </label>
+            <Label 
+              htmlFor={`feature-${option.id}`} 
+              className="text-navy-700 dark:text-white cursor-pointer text-sm"
+            >
+              {option.label}
+            </Label>
+          </div>
         ))}
       </div>
     </div>

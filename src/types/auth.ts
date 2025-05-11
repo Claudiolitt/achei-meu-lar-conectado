@@ -1,3 +1,4 @@
+
 export interface User {
   id: string;
   name: string;
@@ -6,6 +7,8 @@ export interface User {
   cpf?: string;
   avatar?: string;
   verified: boolean;
+  type?: 'owner' | 'client';
+  photoUrl?: string;
   preferences?: {
     propertyTypes: string[];
     budgetRange: {
@@ -37,4 +40,5 @@ export interface AuthContextType {
   updatePreferences: (preferences: User['preferences']) => Promise<void>;
   sendPasswordResetEmail: (email: string) => Promise<void>;
   verifyEmail: () => Promise<void>;
+  setUserType?: (type: 'owner' | 'client') => Promise<void>;
 }

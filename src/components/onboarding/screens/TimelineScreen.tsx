@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { OnboardingData } from "../OnboardingFlow";
@@ -40,6 +41,7 @@ export default function TimelineScreen({
   onNext,
   onBack,
   isFirstStep,
+  isLastStep,
 }: TimelineScreenProps) {
   const [selectedTimeline, setSelectedTimeline] = useState(data.timeline);
 
@@ -98,4 +100,4 @@ export default function TimelineScreen({
       </div>
     </div>
   );
-} 
+}

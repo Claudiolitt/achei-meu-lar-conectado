@@ -15,8 +15,8 @@ export const useRegister = () => {
 
 // Profile management hooks
 export const useProfile = () => {
-  const { user, updateProfile, verifyEmail, setUserType, isLoading } = useAuth();
-  return { user, updateProfile, verifyEmail, setUserType, isLoading };
+  const { user, updateProfile, verifyEmail, isLoading } = useAuth();
+  return { user, updateProfile, verifyEmail, isLoading };
 };
 
 // Authentication status hook
