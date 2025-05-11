@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
@@ -21,13 +22,14 @@ export const RoomFilters: React.FC<RoomFiltersProps> = ({
 }) => {
   const renderSelect = (value: number, onChange: (value: number) => void) => (
     <Select
-      value={value === 0 ? '' : value.toString()}
-      onValueChange={(value) => onChange(Number(value))}
+      value={value === 0 ? "any" : value.toString()}
+      onValueChange={(value) => onChange(value === "any" ? 0 : Number(value))}
     >
       <SelectTrigger className="dark:bg-[#232c43] dark:text-white">
         <SelectValue placeholder="Mínimo" />
       </SelectTrigger>
       <SelectContent>
+        <SelectItem value="any">Qualquer</SelectItem>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
           <SelectItem key={num} value={num.toString()}>
             {num}+

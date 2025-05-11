@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Select } from "@/components/ui/select";
 import { SelectTrigger } from "@/components/ui/select";
@@ -60,7 +61,7 @@ export const PropertyTypeSelector: React.FC<PropertyTypeSelectorProps> = ({
         <SelectContent>
           <SelectGroup>
             <SelectLabel>Todos os tipos</SelectLabel>
-            <SelectItem value="">
+            <SelectItem value="all">
               Todos os tipos
             </SelectItem>
           </SelectGroup>
