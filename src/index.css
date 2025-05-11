@@ -113,7 +113,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-white text-navy-800 antialiased;
+    @apply bg-white text-navy-800 antialiased font-sans;
     font-feature-settings: "rlig" 1, "calt" 1;
     overflow-x: hidden;
   }

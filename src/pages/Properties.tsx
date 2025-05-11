@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/pagination';
 import { Grid2X2, List, Map } from 'lucide-react';
 import { Property } from '../types/property';
+import { useSearchFiltersHandlers } from '@/components/search-filters/useSearchFiltersHandlers';
 
 const Properties: React.FC = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list' | 'map'>('grid');
@@ -25,6 +26,11 @@ const Properties: React.FC = () => {
   const [filteredProperties, setFilteredProperties] = useState<Property[]>(mockProperties);
   const propertiesPerPage = 9;
   const location = useLocation();
+  
+  const {
+    activeTab,
+    handleClearFilters
+  } = useSearchFiltersHandlers();
   
   // Filter properties based on URL parameters
   useEffect(() => {
@@ -174,7 +180,7 @@ const Properties: React.FC = () => {
               {filteredProperties.length === 0 ? (
                 <div className="py-12 text-center">
                   <p className="text-navy-600">Nenhum imóvel corresponde aos critérios de busca.</p>
-                  <Button variant="outline" className="mt-4">Limpar filtros</Button>
+                  <Button variant="outline" className="mt-4" onClick={handleClearFilters}>Limpar filtros</Button>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -192,7 +198,7 @@ const Properties: React.FC = () => {
               {filteredProperties.length === 0 ? (
                 <div className="py-12 text-center">
                   <p className="text-navy-600">Nenhum imóvel corresponde aos critérios de busca.</p>
-                  <Button variant="outline" className="mt-4">Limpar filtros</Button>
+                  <Button variant="outline" className="mt-4" onClick={handleClearFilters}>Limpar filtros</Button>
                 </div>
               ) : (
                 <div className="space-y-4">

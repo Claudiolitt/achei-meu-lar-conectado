@@ -210,11 +210,15 @@ export function useSearchFiltersHandlers() {
     setMinPropertyTax(0);
     setMaxPropertyTax(0);
     setLocation('');
-    navigate('/properties');
+    const transaction = activeTab === 'comprar' ? 'sale' : 'rent';
+    navigate(`/properties?transaction=${transaction}`);
   };
 
   const handleQuickSearch = () => {
-    handleSearch(new Event('submit') as unknown as React.FormEvent);
+    const params = new URLSearchParams();
+    params.append('transaction', activeTab === 'comprar' ? 'sale' : 'rent');
+    if (location) params.append('search', location);
+    navigate(`/properties?${params.toString()}`);
   };
 
   return {

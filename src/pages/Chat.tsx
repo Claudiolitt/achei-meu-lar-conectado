@@ -1,32 +1,9 @@
 import React, { useState } from 'react';
-import { ConversationList } from '@/components/chat/ConversationList';
-import { ChatArea } from '@/components/chat/ChatArea';
-import { Conversation } from '@/types/chat';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Separator } from '@/components/ui/separator';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { 
-  MessageCircle, 
-  Send, 
-  Search, 
-  User, 
-  Home, 
-  Plus,
-  X,
-  Archive
-} from 'lucide-react';
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuTrigger 
-} from '@/components/ui/dropdown-menu';
+import { ConversationList } from '@/components/chat/ConversationList';
+import { ChatArea } from '@/components/chat/ChatArea';
+import { Conversation, ChatMessage } from '@/types/chat';
 
 // Mock data - substituir por dados reais da API
 const mockConversations: Conversation[] = [
@@ -54,12 +31,11 @@ const mockConversations: Conversation[] = [
       {
         id: '2',
         content: 'Sim, está disponível! Posso ajudar com mais alguma informação?',
-        sender: 'contact',
+        sender: 'other',
         timestamp: new Date().toISOString(),
       },
     ],
   },
-  // Adicionar mais conversas mock aqui
 ];
 
 export default function Chat() {
@@ -75,7 +51,7 @@ export default function Chat() {
   const handleSendMessage = (message: string) => {
     if (!activeConversation) return;
 
-    const newMessage = {
+    const newMessage: ChatMessage = {
       id: Date.now().toString(),
       content: message,
       sender: 'user',
@@ -97,23 +73,27 @@ export default function Chat() {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Mensagens</h1>
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 h-[calc(100vh-8rem)]">
-        <ConversationList
-          conversations={filteredConversations}
-          activeConversation={activeConversation}
-          onConversationClick={setActiveConversation}
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-        />
-        <div className="md:col-span-8">
-          <ChatArea
-            conversation={conversations.find((c) => c.id === activeConversation) || null}
-            onSendMessage={handleSendMessage}
+    <div className="flex flex-col min-h-screen">
+      <Navbar />
+      <main className="flex-1 container mx-auto p-4">
+        <h1 className="text-2xl font-bold mb-4">Mensagens</h1>
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 h-[calc(100vh-8rem)]">
+          <ConversationList
+            conversations={filteredConversations}
+            activeConversation={activeConversation}
+            onConversationClick={setActiveConversation}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
           />
+          <div className="md:col-span-8">
+            <ChatArea
+              conversation={conversations.find((c) => c.id === activeConversation) || null}
+              onSendMessage={handleSendMessage}
+            />
+          </div>
         </div>
-      </div>
+      </main>
+      <Footer />
     </div>
   );
 }

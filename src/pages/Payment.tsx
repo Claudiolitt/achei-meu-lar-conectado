@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { SubscriptionPlans } from '@/components/payment/SubscriptionPlans';
 import { PaymentForm } from '@/components/payment/PaymentForm';
@@ -46,8 +46,16 @@ const subscriptionPlans: SubscriptionPlan[] = [
 
 export default function Payment() {
   const navigate = useNavigate();
-  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+  const { planId } = useParams<{ planId: string }>();
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(planId || null);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (planId && !subscriptionPlans.find(p => p.id === planId)) {
+      toast.error('Plano não encontrado');
+      navigate('/subscriptions');
+    }
+  }, [planId, navigate]);
 
   const handleSelectPlan = (planId: string) => {
     setSelectedPlan(planId);
