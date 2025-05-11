@@ -24,7 +24,7 @@ const Index: React.FC = () => {
       <main className="flex-grow">
         <Hero />
         
-        <section className="container mx-auto px-4 -mt-8 relative z-20 bg-[#fff] dark:bg-[#18223a] rounded-xl transition-colors">
+        <section className="w-full max-w-3xl mx-auto px-4 -mt-8 relative z-20 bg-[#fff] dark:bg-[#18223a] rounded-xl transition-colors">
           <SearchFilters />
         </section>
         

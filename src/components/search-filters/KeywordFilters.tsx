@@ -1,7 +1,5 @@
-
 import React from 'react';
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 
 interface KeywordFiltersProps {
   keywords: string;
@@ -13,9 +11,7 @@ interface KeywordFiltersProps {
 
 export const KeywordFilters: React.FC<KeywordFiltersProps> = ({
   keywords,
-  excludeUnderContract,
   onKeywordsChange,
-  onExcludeUnderContractChange,
   transactionType
 }) => {
   return (
@@ -29,18 +25,6 @@ export const KeywordFilters: React.FC<KeywordFiltersProps> = ({
           className="dark:bg-[#232c43] dark:text-white w-full"
         />
       </div>
-
-      {transactionType === 'rent' && (
-        <div>
-          <label className="flex items-center gap-2 cursor-pointer">
-            <Checkbox
-              checked={excludeUnderContract}
-              onCheckedChange={(checked) => onExcludeUnderContractChange(checked as boolean)}
-            />
-            <span className="text-navy-700 dark:text-white">Excluir imóveis sob contrato</span>
-          </label>
-        </div>
-      )}
     </div>
   );
 };

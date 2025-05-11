@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -67,6 +66,30 @@ export const PropertyTypeSelector: React.FC<PropertyTypeSelectorProps> = ({
 
   // Check if all options are selected
   const allSelected = propertyTypes.length === allOptions.length;
+  // Check if all residential or all commercial are selected
+  const allResidentialSelected = residentialOptions.every(opt => propertyTypes.includes(opt.id));
+  const allCommercialSelected = commercialOptions.every(opt => propertyTypes.includes(opt.id));
+
+  // Handle select/deselect all residential
+  const handleSelectAllResidential = (checked: boolean) => {
+    if (checked) {
+      // Adiciona todos residenciais (sem duplicar)
+      const newTypes = Array.from(new Set([...propertyTypes, ...residentialOptions.map(o => o.id)]));
+      onPropertyTypesChange(newTypes);
+    } else {
+      // Remove todos residenciais
+      onPropertyTypesChange(propertyTypes.filter(id => !residentialOptions.some(o => o.id === id)));
+    }
+  };
+  // Handle select/deselect all commercial
+  const handleSelectAllCommercial = (checked: boolean) => {
+    if (checked) {
+      const newTypes = Array.from(new Set([...propertyTypes, ...commercialOptions.map(o => o.id)]));
+      onPropertyTypesChange(newTypes);
+    } else {
+      onPropertyTypesChange(propertyTypes.filter(id => !commercialOptions.some(o => o.id === id)));
+    }
+  };
 
   return (
     <div className="mb-6">
@@ -86,6 +109,14 @@ export const PropertyTypeSelector: React.FC<PropertyTypeSelectorProps> = ({
         {/* Residential group */}
         <div>
           <h5 className="text-sm font-medium text-navy-700 dark:text-white mb-2">Residencial</h5>
+          <div className="flex items-center gap-2 mb-2">
+            <Checkbox
+              id="select-all-residential"
+              checked={allResidentialSelected}
+              onCheckedChange={handleSelectAllResidential}
+            />
+            <Label htmlFor="select-all-residential" className="text-navy-700 dark:text-white">Selecionar todos residenciais</Label>
+          </div>
           <div className="grid grid-cols-2 gap-2">
             {residentialOptions.map(option => (
               <div key={option.id} className="flex items-center gap-2">
@@ -103,6 +134,14 @@ export const PropertyTypeSelector: React.FC<PropertyTypeSelectorProps> = ({
         {/* Commercial group */}
         <div>
           <h5 className="text-sm font-medium text-navy-700 dark:text-white mb-2">Comercial</h5>
+          <div className="flex items-center gap-2 mb-2">
+            <Checkbox
+              id="select-all-commercial"
+              checked={allCommercialSelected}
+              onCheckedChange={handleSelectAllCommercial}
+            />
+            <Label htmlFor="select-all-commercial" className="text-navy-700 dark:text-white">Selecionar todos comerciais</Label>
+          </div>
           <div className="grid grid-cols-2 gap-2">
             {commercialOptions.map(option => (
               <div key={option.id} className="flex items-center gap-2">

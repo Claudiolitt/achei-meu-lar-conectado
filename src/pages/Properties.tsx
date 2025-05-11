@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -64,13 +63,31 @@ const Properties: React.FC = () => {
     
     // Price range
     const minPrice = params.get('minPrice');
-    if (minPrice) {
-      filtered = filtered.filter(property => property.price >= Number(minPrice));
-    }
-    
     const maxPrice = params.get('maxPrice');
-    if (maxPrice) {
-      filtered = filtered.filter(property => property.price <= Number(maxPrice));
+    const minTotalPrice = params.get('minTotalPrice');
+    const maxTotalPrice = params.get('maxTotalPrice');
+    
+    if (transactionType === 'rent' && (minTotalPrice || maxTotalPrice)) {
+      // Filter by total price (rent + condominium + IPTU) for rental properties
+      filtered = filtered.filter(property => {
+        if (property.priceType !== 'rent') return true;
+        
+        const totalPrice = property.price + 
+          (property.features.condominiumFee || 0) + 
+          ((property.features.iptu || 0) / 12); // Convert annual IPTU to monthly
+        
+        if (minTotalPrice && totalPrice < Number(minTotalPrice)) return false;
+        if (maxTotalPrice && totalPrice > Number(maxTotalPrice)) return false;
+        return true;
+      });
+    } else {
+      // Regular price filter
+      if (minPrice) {
+        filtered = filtered.filter(property => property.price >= Number(minPrice));
+      }
+      if (maxPrice) {
+        filtered = filtered.filter(property => property.price <= Number(maxPrice));
+      }
     }
     
     // Area range
@@ -107,8 +124,10 @@ const Properties: React.FC = () => {
       <main className="flex-grow">
         {/* Search Filters */}
         <section className="bg-white dark:bg-[#18223a] py-6">
-          <div className="container mx-auto px-4">
-            <SearchFilters />
+          <div className="container mx-auto px-4 flex justify-center">
+            <div className="w-full max-w-3xl">
+              <SearchFilters />
+            </div>
           </div>
         </section>
         

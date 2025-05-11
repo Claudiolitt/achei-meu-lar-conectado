@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { PropertyTypeSelector } from './PropertyTypeSelector';
 import { PriceFilters } from './PriceFilters';
@@ -84,6 +83,7 @@ const SearchFilterContent: React.FC<SearchFilterContentProps> = ({
           maxPropertyTax={maxPropertyTax}
           onMinPropertyTaxChange={setMinPropertyTax}
           onMaxPropertyTaxChange={setMaxPropertyTax}
+          transactionType={transactionType}
         />
         <PropertyFeatures
           features={features}

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SearchFilterContent from './SearchFilterContent';
@@ -24,7 +23,7 @@ const SearchFiltersTabs: React.FC<SearchFiltersTabsProps> = ({
   
   return (
     <Tabs value={currentTab} onValueChange={handleChange}>
-      <TabsList className={isDialog ? "" : "grid w-full grid-cols-2"}>
+      <TabsList className={isDialog ? 'flex justify-start w-auto mb-4' : 'grid w-full grid-cols-2'}>
         <TabsTrigger value={isDialog ? "buy" : "comprar"}>
           {isDialog ? "Comprar" : "Comprar"}
         </TabsTrigger>
