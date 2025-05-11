@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
@@ -20,7 +19,7 @@ import AutocompleteSearch from "@/components/AutocompleteSearch";
 
 const SearchFilters: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [propertyType, setPropertyType] = useState<string>("");
+  const [propertyTypes, setPropertyTypes] = useState<string[]>([]);
   const [minPrice, setMinPrice] = useState<number>(0);
   const [maxPrice, setMaxPrice] = useState<number>(0);
   const [minAge, setMinAge] = useState<number>(0);
@@ -87,7 +86,11 @@ const SearchFilters: React.FC = () => {
     
     params.append('transaction', activeTab === 'comprar' ? 'sale' : 'rent');
     
-    if (propertyType) params.append('type', propertyType);
+    // Add selected property types to URL
+    if (propertyTypes.length > 0) {
+      params.append('propertyTypes', propertyTypes.join(','));
+    }
+    
     if (location) params.append('search', location);
     if (minPrice > 0) params.append('minPrice', minPrice.toString());
     if (maxPrice > 0) params.append('maxPrice', maxPrice.toString());
@@ -115,7 +118,7 @@ const SearchFilters: React.FC = () => {
   };
 
   const handleClearFilters = () => {
-    setPropertyType("");
+    setPropertyTypes([]);
     setMinPrice(0);
     setMaxPrice(0);
     setMinAge(0);
@@ -213,8 +216,8 @@ const SearchFilters: React.FC = () => {
               <div className="max-h-[70vh] overflow-y-auto">
                 <div className="space-y-6 p-1">
                   <PropertyTypeSelector
-                    propertyType={propertyType}
-                    onPropertyTypeChange={setPropertyType}
+                    propertyTypes={propertyTypes}
+                    onPropertyTypesChange={setPropertyTypes}
                   />
                   <PriceFilters
                     minPrice={minPrice}
@@ -263,8 +266,8 @@ const SearchFilters: React.FC = () => {
               <div className="max-h-[70vh] overflow-y-auto">
                 <div className="space-y-6 p-1">
                   <PropertyTypeSelector
-                    propertyType={propertyType}
-                    onPropertyTypeChange={setPropertyType}
+                    propertyTypes={propertyTypes}
+                    onPropertyTypesChange={setPropertyTypes}
                   />
                   <PriceFilters
                     minPrice={minPrice}

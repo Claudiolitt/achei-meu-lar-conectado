@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { OnboardingData } from "../OnboardingFlow";
@@ -28,6 +29,7 @@ export default function PropertyPreferences({
   isFirstStep,
 }: PropertyPreferencesProps) {
   const [selectedTypes, setSelectedTypes] = useState<string[]>(data.propertyTypes);
+  const allTypesSelected = selectedTypes.length === propertyTypes.length;
 
   const handleTypeToggle = (typeId: string) => {
     setSelectedTypes((prev) =>
@@ -35,6 +37,14 @@ export default function PropertyPreferences({
         ? prev.filter((id) => id !== typeId)
         : [...prev, typeId]
     );
+  };
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedTypes(propertyTypes.map(type => type.id));
+    } else {
+      setSelectedTypes([]);
+    }
   };
 
   const handleNext = () => {
@@ -48,6 +58,15 @@ export default function PropertyPreferences({
         <p className="text-muted-foreground">
           Selecione todos os tipos de imóveis que você tem interesse.
         </p>
+      </div>
+
+      <div className="flex items-center space-x-2 mb-3">
+        <Checkbox
+          id="select-all-types"
+          checked={allTypesSelected}
+          onCheckedChange={handleSelectAll}
+        />
+        <Label htmlFor="select-all-types">Selecionar todos</Label>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

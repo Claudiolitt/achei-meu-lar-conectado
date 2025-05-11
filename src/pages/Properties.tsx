@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -43,7 +44,7 @@ const Properties: React.FC = () => {
       );
     }
     
-    // Property type
+    // Property type - support for legacy 'type' parameter (single selection)
     const propertyType = params.get('type');
     if (propertyType && propertyType !== 'all') {
       filtered = filtered.filter(property => property.type === propertyType);
@@ -55,7 +56,7 @@ const Properties: React.FC = () => {
       filtered = filtered.filter(property => property.priceType === transactionType);
     }
     
-    // Property types (multiple)
+    // Property types (multiple selection)
     const propertyTypes = params.get('propertyTypes')?.split(',');
     if (propertyTypes && propertyTypes.length > 0 && propertyTypes[0] !== '') {
       filtered = filtered.filter(property => propertyTypes.includes(property.type));

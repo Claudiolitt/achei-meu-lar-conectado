@@ -1,24 +1,16 @@
 
 import React from 'react';
-import { Select } from "@/components/ui/select";
-import { SelectTrigger } from "@/components/ui/select";
-import { SelectValue } from "@/components/ui/select";
-import { SelectContent } from "@/components/ui/select";
-import { SelectItem } from "@/components/ui/select";
-import { SelectGroup } from "@/components/ui/select";
-import { SelectLabel } from "@/components/ui/select";
-import { SelectSeparator } from "@/components/ui/select";
-import { SelectScrollUpButton } from "@/components/ui/select";
-import { SelectScrollDownButton } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 interface PropertyTypeSelectorProps {
-  propertyType: string;
-  onPropertyTypeChange: (value: string) => void;
+  propertyTypes: string[];
+  onPropertyTypesChange: (values: string[]) => void;
 }
 
 export const PropertyTypeSelector: React.FC<PropertyTypeSelectorProps> = ({
-  propertyType,
-  onPropertyTypeChange,
+  propertyTypes,
+  onPropertyTypesChange,
 }) => {
   const residentialOptions = [
     { id: 'apartamento', label: 'Apartamento' },
@@ -48,43 +40,83 @@ export const PropertyTypeSelector: React.FC<PropertyTypeSelectorProps> = ({
     { id: 'predio-industrial', label: 'Prédio Industrial' },
   ];
 
+  // All property options for easy access
+  const allOptions = [...residentialOptions, ...commercialOptions];
+
+  // Handle select/deselect all
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      // Select all options
+      onPropertyTypesChange(allOptions.map(option => option.id));
+    } else {
+      // Deselect all
+      onPropertyTypesChange([]);
+    }
+  };
+
+  // Handle individual option selection
+  const handleOptionToggle = (optionId: string, checked: boolean) => {
+    if (checked) {
+      // Add the option
+      onPropertyTypesChange([...propertyTypes, optionId]);
+    } else {
+      // Remove the option
+      onPropertyTypesChange(propertyTypes.filter(id => id !== optionId));
+    }
+  };
+
+  // Check if all options are selected
+  const allSelected = propertyTypes.length === allOptions.length;
+
   return (
     <div className="mb-6">
       <h4 className="font-semibold mb-2 text-navy-900 dark:text-white">Tipo de Imóvel</h4>
-      <Select
-        value={propertyType}
-        onValueChange={onPropertyTypeChange}
-      >
-        <SelectTrigger className="dark:bg-[#232c43] dark:text-white">
-          <SelectValue placeholder="Selecione o tipo de imóvel" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>Todos os tipos</SelectLabel>
-            <SelectItem value="all">
-              Todos os tipos
-            </SelectItem>
-          </SelectGroup>
-          <SelectSeparator />
-          <SelectGroup>
-            <SelectLabel>Residencial</SelectLabel>
-            {residentialOptions.map((option) => (
-              <SelectItem key={option.id} value={option.id}>
-                {option.label}
-              </SelectItem>
+      
+      <div className="space-y-4">
+        {/* Select all option */}
+        <div className="flex items-center gap-2">
+          <Checkbox
+            id="select-all"
+            checked={allSelected}
+            onCheckedChange={handleSelectAll}
+          />
+          <Label htmlFor="select-all" className="font-medium">Todos os tipos</Label>
+        </div>
+        
+        {/* Residential group */}
+        <div>
+          <h5 className="text-sm font-medium text-navy-700 dark:text-white mb-2">Residencial</h5>
+          <div className="grid grid-cols-2 gap-2">
+            {residentialOptions.map(option => (
+              <div key={option.id} className="flex items-center gap-2">
+                <Checkbox
+                  id={`prop-type-${option.id}`}
+                  checked={propertyTypes.includes(option.id)}
+                  onCheckedChange={(checked) => handleOptionToggle(option.id, checked as boolean)}
+                />
+                <Label htmlFor={`prop-type-${option.id}`} className="text-navy-700 dark:text-white">{option.label}</Label>
+              </div>
             ))}
-          </SelectGroup>
-          <SelectSeparator />
-          <SelectGroup>
-            <SelectLabel>Comercial</SelectLabel>
-            {commercialOptions.map((option) => (
-              <SelectItem key={option.id} value={option.id}>
-                {option.label}
-              </SelectItem>
+          </div>
+        </div>
+        
+        {/* Commercial group */}
+        <div>
+          <h5 className="text-sm font-medium text-navy-700 dark:text-white mb-2">Comercial</h5>
+          <div className="grid grid-cols-2 gap-2">
+            {commercialOptions.map(option => (
+              <div key={option.id} className="flex items-center gap-2">
+                <Checkbox
+                  id={`prop-type-${option.id}`}
+                  checked={propertyTypes.includes(option.id)}
+                  onCheckedChange={(checked) => handleOptionToggle(option.id, checked as boolean)}
+                />
+                <Label htmlFor={`prop-type-${option.id}`} className="text-navy-700 dark:text-white">{option.label}</Label>
+              </div>
             ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
