@@ -1,73 +1,202 @@
-# Welcome to your Lovable project
+# 🏠 Achei Meu Lar Conectado
 
-## Project info
+A modern real estate platform that connects property owners with potential tenants, providing an intuitive and efficient solution for the real estate market.
 
-**URL**: https://lovable.dev/projects/073e8380-b7df-49e8-be5f-4a0e7365ae3e
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000000?style=for-the-badge&logo=shadcnui&logoColor=white)
 
-## How can I edit this code?
+## 📋 Sobre o Projeto
 
-There are several ways of editing your application.
+**Achei Meu Lar Conectado** é uma aplicação web moderna desenvolvida para facilitar a busca e conexão entre proprietários de imóveis e potenciais inquilinos. A plataforma oferece uma interface intuitiva e responsiva, proporcionando uma experiência eficiente para todos os usuários do mercado imobiliário.
 
-**Use Lovable**
+## ✨ Funcionalidades
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/073e8380-b7df-49e8-be5f-4a0e7365ae3e) and start prompting.
+- 🔍 **Busca de Imóveis** - Sistema de busca avançada com filtros personalizados
+- 📱 **Design Responsivo** - Interface otimizada para todos os dispositivos
+- 🎨 **UI Moderna** - Interface construída com componentes acessíveis e modernos
+- ⚡ **Performance** - Aplicação rápida e otimizada com Vite
+- 🔒 **Type Safety** - Desenvolvido com TypeScript para maior confiabilidade
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🚀 Tecnologias Utilizadas
 
-**Use your preferred IDE**
+### Frontend
+- **React** - Biblioteca JavaScript para construção de interfaces
+- **TypeScript** - Superset do JavaScript com tipagem estática
+- **Vite** - Build tool moderna e rápida
+- **Tailwind CSS** - Framework CSS utility-first
+- **shadcn/ui** - Componentes UI acessíveis e customizáveis
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Ferramentas de Desenvolvimento
+- **ESLint** - Linter para garantir qualidade de código
+- **PostCSS** - Processador CSS
+- **Git** - Controle de versão
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 📦 Pré-requisitos
 
-Follow these steps:
+Antes de começar, certifique-se de ter instalado:
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+- **Node.js** (versão 18 ou superior)
+- **npm** ou **pnpm** ou **bun** (gerenciador de pacotes)
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+> 💡 **Dica**: Recomendamos usar [nvm](https://github.com/nvm-sh/nvm) para gerenciar versões do Node.js
 
-# Step 3: Install the necessary dependencies.
-npm i
+## 🛠️ Instalação
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+Siga estes passos para configurar o projeto localmente:
+
+### 1. Clone o repositório
+
+```bash
+git clone https://github.com/Claudiolitt/achei-meu-lar-conectado.git
 ```
 
-**Edit a file directly in GitHub**
+### 2. Navegue até o diretório do projeto
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```bash
+cd achei-meu-lar-conectado
+```
 
-**Use GitHub Codespaces**
+### 3. Instale as dependências
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```bash
+npm install
+# ou
+pnpm install
+# ou
+bun install
+```
 
-## What technologies are used for this project?
+### 4. Inicie o servidor de desenvolvimento
 
-This project is built with:
+```bash
+npm run dev
+# ou
+pnpm dev
+# ou
+bun dev
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+A aplicação estará disponível em `http://localhost:5173` (ou outra porta se 5173 estiver em uso).
 
-## How can I deploy this project?
+## 📁 Estrutura do Projeto
 
-Simply open [Lovable](https://lovable.dev/projects/073e8380-b7df-49e8-be5f-4a0e7365ae3e) and click on Share -> Publish.
+```
+achei-meu-lar-conectado/
+├── public/                 # Arquivos estáticos
+├── src/                   # Código fonte
+│   ├── components/        # Componentes React
+│   ├── pages/            # Páginas da aplicação
+│   ├── hooks/            # Custom hooks
+│   ├── utils/            # Funções utilitárias
+│   ├── styles/          # Estilos globais
+│   └── types/            # Definições TypeScript
+├── .gitignore
+├── components.json       # Configuração shadcn/ui
+├── eslint.config.js      # Configuração ESLint
+├── index.html
+├── package.json
+├── postcss.config.js     # Configuração PostCSS
+├── tailwind.config.ts    # Configuração Tailwind
+├── tsconfig.json         # Configuração TypeScript
+└── vite.config.ts        # Configuração Vite
+```
 
-## Can I connect a custom domain to my Lovable project?
+## 🎯 Scripts Disponíveis
 
-Yes, you can!
+```bash
+# Desenvolvimento
+npm run dev          # Inicia servidor de desenvolvimento
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+# Build
+npm run build        # Cria build de produção
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+# Preview
+npm run preview      # Preview do build de produção
+
+# Lint
+npm run lint         # Executa o linter
+```
+
+## 🌐 Deploy
+
+### Deploy com Lovable
+
+Este projeto foi criado com [Lovable](https://lovable.dev). Para fazer deploy:
+
+1. Acesse o projeto no Lovable
+2. Clique em **Share → Publish**
+3. Siga as instruções para configurar o domínio
+
+### Deploy Manual
+
+#### Vercel
+
+```bash
+npm install -g vercel
+vercel
+```
+
+#### Netlify
+
+```bash
+npm run build
+# Faça upload da pasta 'dist' para Netlify
+```
+
+#### Outros Provedores
+
+O projeto gera uma build estática na pasta `dist` que pode ser hospedada em qualquer serviço de hospedagem estática.
+
+## 🔧 Configuração
+
+### Variáveis de Ambiente
+
+Crie um arquivo `.env` na raiz do projeto (se necessário):
+
+```env
+VITE_API_URL=your_api_url_here
+```
+
+## 🤝 Contribuindo
+
+Contribuições são sempre bem-vindas! Sinta-se à vontade para:
+
+1. Fazer um Fork do projeto
+2. Criar uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abrir um Pull Request
+
+## 📝 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
+
+## 👤 Autor
+
+**Cláudio Leite**
+
+- LinkedIn: [@claudioleite02](https://www.linkedin.com/in/claudioleite02/)
+- GitHub: [@Claudiolitt](https://github.com/Claudiolitt)
+- Email: claudio.leite_@live.com
+
+## 🙏 Agradecimentos
+
+- [shadcn/ui](https://ui.shadcn.com/) - Por componentes incríveis
+- [Vite](https://vitejs.dev/) - Por uma experiência de desenvolvimento excepcional
+- [Tailwind CSS](https://tailwindcss.com/) - Por um framework CSS poderoso
+- [Lovable](https://lovable.dev/) - Por facilitar o desenvolvimento
+
+## 📊 Estatísticas do Projeto
+
+![GitHub stars](https://img.shields.io/github/stars/Claudiolitt/achei-meu-lar-conectado?style=social)
+![GitHub forks](https://img.shields.io/github/forks/Claudiolitt/achei-meu-lar-conectado?style=social)
+![GitHub issues](https://img.shields.io/github/issues/Claudiolitt/achei-meu-lar-conectado)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/Claudiolitt/achei-meu-lar-conectado)
+
+---
+
+⭐️ Se este projeto foi útil para você, considere dar uma estrela!
+
